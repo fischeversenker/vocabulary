@@ -1,9 +1,8 @@
-import { useSignal } from '@preact/signals';
 import { Handlers, PageProps } from "$fresh/server.ts";
-import { Button } from '../components/Button.tsx';
+import { Button } from "../components/Button.tsx";
 
 interface Data {
-  knownWords: Word[]
+  knownWords: Word[];
 }
 
 interface Word {
@@ -19,7 +18,7 @@ export const handler: Handlers<Data> = {
     const wordToDelete = url.searchParams.get("wordToDelete");
 
     const kv = await Deno.openKv();
-    const knownWordsKv = await kv.get<Word[]>(['words']);
+    const knownWordsKv = await kv.get<Word[]>(["words"]);
     const knownWords = knownWordsKv.value ?? [];
     let newKnownWords: Word[] = [...knownWords];
 
@@ -31,10 +30,10 @@ export const handler: Handlers<Data> = {
     } else if (wordToDelete) {
       newKnownWords = knownWords.filter((word) => word.word !== wordToDelete);
     }
-    await kv.set(['words'], newKnownWords);
+    await kv.set(["words"], newKnownWords);
 
     return ctx.render({ knownWords: newKnownWords });
-  }
+  },
 };
 
 export default function Home({ data }: PageProps<Data>) {
@@ -50,7 +49,16 @@ export default function Home({ data }: PageProps<Data>) {
       <div style="padding-block:1rem;">
         <ul>
           {knownWords.reverse().map((word) => (
-            <li key={word.word} style="display:flex;gap:0.5rem;"><span>{word.word}</span><i>{word.translation}</i><span><form style="display:inline;"><input type="hidden" name="wordToDelete" value={word.word} /><Button type="submit">X</Button></form></span></li>
+            <li key={word.word} style="display:flex;gap:0.5rem;">
+              <span>{word.word}</span>
+              <i>{word.translation}</i>
+              <span>
+                <form style="display:inline;">
+                  <input type="hidden" name="wordToDelete" value={word.word} />
+                  <Button type="submit">X</Button>
+                </form>
+              </span>
+            </li>
           ))}
         </ul>
       </div>
