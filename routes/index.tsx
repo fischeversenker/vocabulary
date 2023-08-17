@@ -42,13 +42,12 @@ export default function Home({ data }: PageProps<Data>) {
 
   return (
     <div>
-      <p style="padding-bottom:1rem;">Add new word:</p>
-      <form style="display:flex;gap:0.5rem;">
-        <input type="text" name="word" required />
-        <input type="text" name="translation" required />
+      <form style="display:flex;gap:0.5rem;padding-top:1rem;">
+        <input type="text" name="word" required style="min-width:0;" />
+        <input type="text" name="translation" required style="min-width:0;" />
         <button type="submit">Add</button>
       </form>
-      <div style="padding-top:1rem;">
+      <div style="padding-block:1rem;">
         <ul>
           {knownWords.reverse().map((word) => (
             <li key={word.word} style="display:flex;gap:0.5rem;"><span>{word.word}</span><i>{word.translation}</i><span><form style="display:inline;"><input type="hidden" name="wordToDelete" value={word.word} /><Button type="submit">X</Button></form></span></li>

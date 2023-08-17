@@ -16,7 +16,6 @@ export default function App({ Component }: AppProps) {
         <main style="padding:1rem;">
           <Component />
         </main>
-        <Footer />
       </body>
     </html>
   );
