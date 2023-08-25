@@ -1,38 +1,46 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
-import { Button } from "../components/Button.tsx";
+import { Word } from "../components/Word.tsx";
 
 interface Data {
   knownWords: Word[];
 }
 
-interface Word {
-  word: string;
+export interface Word {
+  original: string;
   translation: string;
 }
 
 export const handler: Handlers<Data> = {
   async GET(req, ctx) {
     const url = new URL(req.url);
-    const word = url.searchParams.get("word");
+    const original = url.searchParams.get("original");
     const translation = url.searchParams.get("translation");
     const wordToDelete = url.searchParams.get("wordToDelete");
 
     const kv = await Deno.openKv();
-    const knownWordsKv = await kv.get<Word[]>(["words"]);
-    const knownWords = knownWordsKv.value ?? [];
-    let newKnownWords: Word[] = [...knownWords];
+    const knownWordsKv = await kv.get<Word[]>(["fischeversenker", "words"]);
+    let knownWords = knownWordsKv.value ?? [];
 
-    if (word && translation) {
-      if (knownWords.some((knownWord) => knownWord.word === word)) {
-        return ctx.render({ knownWords });
+    if (original && translation || wordToDelete) {
+      if (original && translation) {
+        knownWords.push({ original, translation });
+      } else if (wordToDelete) {
+        knownWords = knownWords.filter((word) =>
+          word.original !== wordToDelete
+        );
+        ctx.params.wordToDelete = "";
       }
-      newKnownWords.push({ word, translation });
-    } else if (wordToDelete) {
-      newKnownWords = knownWords.filter((word) => word.word !== wordToDelete);
-    }
-    await kv.set(["words"], newKnownWords);
+      await kv.set(["fischeversenker", "words"], knownWords);
 
-    return ctx.render({ knownWords: newKnownWords });
+      const url = new URL(req.url);
+      url.search = "";
+      return new Response(null, {
+        status: 302,
+        headers: { location: url.toString() },
+      });
+    }
+
+    return await ctx.render({ knownWords });
   },
 };
 
@@ -40,27 +48,26 @@ export default function Home({ data }: PageProps<Data>) {
   const { knownWords } = data;
 
   return (
-    <div>
-      <form style="display:flex;gap:0.5rem;padding-top:1rem;">
-        <input type="text" name="word" required style="min-width:0;" />
-        <input type="text" name="translation" required style="min-width:0;" />
-        <button type="submit">Add</button>
+    <div class="container is-max-desktop">
+      <form class="block" style="display:flex;gap:0.5rem;padding-top:1rem;">
+        <input
+          class="input"
+          type="text"
+          name="original"
+          required
+        />
+        <input
+          class="input"
+          type="text"
+          name="translation"
+          required
+        />
+        <button class="button is-primary has-text-weight-bold" type="submit">
+          +
+        </button>
       </form>
-      <div style="padding-block:1rem;">
-        <ul>
-          {knownWords.reverse().map((word) => (
-            <li key={word.word} style="display:flex;gap:0.5rem;">
-              <span>{word.word}</span>
-              <i>{word.translation}</i>
-              <span>
-                <form style="display:inline;">
-                  <input type="hidden" name="wordToDelete" value={word.word} />
-                  <Button type="submit">X</Button>
-                </form>
-              </span>
-            </li>
-          ))}
-        </ul>
+      <div class="block">
+        {knownWords.map((word) => <Word {...word}></Word>)}
       </div>
     </div>
   );
