@@ -18,7 +18,7 @@ export const handler: Handlers<Data> = {
     const wordToDelete = url.searchParams.get("wordToDelete");
 
     const kv = await Deno.openKv();
-    const knownWordsKv = await kv.get<Word[]>(["fischeversenker", "words"]);
+    const knownWordsKv = await kv.get<Word[]>(["fischeversenker", "bulgarian", "words"]);
     let knownWords = knownWordsKv.value ?? [];
 
     if (original && translation || wordToDelete) {
@@ -30,10 +30,11 @@ export const handler: Handlers<Data> = {
         );
         ctx.params.wordToDelete = "";
       }
-      await kv.set(["fischeversenker", "words"], knownWords);
+      await kv.set(["fischeversenker", "bulgarian", "words"], knownWords);
 
       const url = new URL(req.url);
       url.search = "";
+
       return new Response(null, {
         status: 302,
         headers: { location: url.toString() },
@@ -54,12 +55,14 @@ export default function Home({ data }: PageProps<Data>) {
           class="input"
           type="text"
           name="original"
+          placeholder="Original"
           required
         />
         <input
           class="input"
           type="text"
           name="translation"
+          placeholder="Translation"
           required
         />
         <button class="button is-primary has-text-weight-bold" type="submit">
