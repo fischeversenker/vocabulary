@@ -18,7 +18,11 @@ export const handler: Handlers<Data> = {
     const wordToDelete = url.searchParams.get("wordToDelete");
 
     const kv = await Deno.openKv();
-    const knownWordsKv = await kv.get<Word[]>(["fischeversenker", "bulgarian", "words"]);
+    const knownWordsKv = await kv.get<Word[]>([
+      "fischeversenker",
+      "bulgarian",
+      "words",
+    ]);
     let knownWords = knownWordsKv.value ?? [];
 
     if (original && translation || wordToDelete) {
