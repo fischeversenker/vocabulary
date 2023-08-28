@@ -18,17 +18,7 @@ export const handler: Handlers<Data> = {
   async GET(_, ctx) {
     const kv = await Deno.openKv();
     const knownWordsKv = await kv.get<Word[]>(KV_PATH);
-    const knownWords = (knownWordsKv.value ?? []).map((word) => {
-      if (!word.createdAt) {
-        const today = new Date();
-        const yesterday = new Date(today);
-        yesterday.setDate(yesterday.getDate() - 1);
-        word.createdAt = yesterday;
-      }
-      return word;
-    });
-
-    await kv.set(KV_PATH, knownWords);
+    const knownWords = knownWordsKv.value ?? [];
 
     return await ctx.render({ knownWords });
   },
