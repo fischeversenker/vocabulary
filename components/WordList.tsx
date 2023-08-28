@@ -6,7 +6,7 @@ interface WordListProps {
 
 export function WordList(props: WordListProps) {
   return (
-    <table class="table is-striped is-fullwidth">
+    <table class="table is-striped is-fullwidth is-narrow">
       <thead>
         <tr>
           <th>
@@ -28,7 +28,7 @@ export function WordList(props: WordListProps) {
             <th>
               {word.original}
             </th>
-            <td>
+            <td style="word-break:break-all;">
               {word.translation}
             </td>
             <td>
