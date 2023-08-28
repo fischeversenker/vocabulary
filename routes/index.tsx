@@ -1,5 +1,4 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
-import { Word } from "../components/Word.tsx";
 import { NewWord } from "../islands/NewWord.tsx";
 import { WordList } from "../components/WordList.tsx";
 

@@ -1,10 +1,56 @@
-import { Word } from "../components/Word.tsx";
-import { Word as IWord } from "../routes/index.tsx";
+import { Word as Word } from "../routes/index.tsx";
 
 interface WordListProps {
-  words: IWord[];
+  words: Word[];
 }
 
 export function WordList(props: WordListProps) {
-  return [props.words.map((word) => <Word {...word}></Word>)];
+  return (
+    <table class="table is-striped is-fullwidth">
+      <thead>
+        <tr>
+          <th>
+            <abbr title="Original">Orig</abbr>
+          </th>
+          <th>
+            <abbr title="Translation">Trans</abbr>
+          </th>
+          <th>
+            Added
+          </th>
+          <th>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {props.words.map((word) => (
+          <tr>
+            <th>
+              {word.original}
+            </th>
+            <td>
+              {word.translation}
+            </td>
+            <td>
+              <div class="has-text-grey-light">
+                {word.createdAt.toLocaleDateString(["de"], {
+                  dateStyle: "short",
+                })}
+              </div>
+            </td>
+            <td>
+              <form method="POST">
+                <input
+                  type="hidden"
+                  name="wordToDelete"
+                  value={word.original}
+                />
+                <button class="delete" type="submit"></button>
+              </form>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
 }
