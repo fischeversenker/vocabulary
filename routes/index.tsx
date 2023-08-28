@@ -10,6 +10,7 @@ interface Data {
 export interface Word {
   original: string;
   translation: string;
+  createdAt: Date;
 }
 
 const KV_PATH = ["fischeversenker", "bulgarian", "words"] as const;
@@ -18,7 +19,15 @@ export const handler: Handlers<Data> = {
   async GET(_, ctx) {
     const kv = await Deno.openKv();
     const knownWordsKv = await kv.get<Word[]>(KV_PATH);
-    const knownWords = knownWordsKv.value ?? [];
+    const knownWords = (knownWordsKv.value ?? []).map((word) => {
+      if (!word.createdAt) {
+        const today = new Date();
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+        word.createdAt = yesterday;
+      }
+      return word;
+    });
 
     return await ctx.render({ knownWords });
   },
@@ -36,7 +45,7 @@ export const handler: Handlers<Data> = {
     if (wordToDelete) {
       knownWords = knownWords.filter((word) => word.original !== wordToDelete);
     } else if (original && translation) {
-      knownWords.push({ original, translation });
+      knownWords.push({ original, translation, createdAt: new Date() });
       focusNewWord = true;
     } else {
       throw new Error("Invalid POST request");
