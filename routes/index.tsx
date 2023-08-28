@@ -28,6 +28,8 @@ export const handler: Handlers<Data> = {
       return word;
     });
 
+    await kv.set(KV_PATH, knownWords);
+
     return await ctx.render({ knownWords });
   },
   async POST(req) {
