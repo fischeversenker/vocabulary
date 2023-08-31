@@ -15,6 +15,7 @@ export const handler = {
   },
   async POST(_req: Request, _ctx: HandlerContext) {
     const kv = await Deno.openKv();
+    await kv.delete(WORD_DATA_KV_PATH);
 
     const oldKnownWordsKv = await kv.get<Word[]>(WORD_DATA_KV_PATH);
     const oldKnownWords = oldKnownWordsKv.value ?? [];
