@@ -1,10 +1,24 @@
-import { Word as Word } from "../routes/index.tsx";
+import { useEffect } from "preact/hooks";
+import { Word } from "../routes/index.tsx";
+import { wordList } from "../utils/words.ts";
 
-interface WordListProps {
-  words: Word[];
-}
+export function WordList() {
+  useEffect(() => {
+    fetch("/api/words").then(async (words) => {
+      wordList.value = await words.json() as Word[];
+    });
+  }, []);
 
-export function WordList(props: WordListProps) {
+  async function onDelete(e: Event, word: string) {
+    e.preventDefault();
+
+    await fetch(`/api/words/${word}`, {
+      method: "DELETE",
+    });
+    const words = await fetch("/api/words");
+    wordList.value = await words.json() as Word[];
+  }
+
   return (
     <table class="table is-striped is-fullwidth is-narrow">
       <thead>
@@ -23,7 +37,7 @@ export function WordList(props: WordListProps) {
         </tr>
       </thead>
       <tbody>
-        {props.words.map((word) => (
+        {wordList.value.map((word) => (
           <tr>
             <th>
               {word.original}
@@ -33,7 +47,7 @@ export function WordList(props: WordListProps) {
             </td>
             <td>
               <div class="has-text-grey-light">
-                {word.createdAt.toLocaleDateString(["de"], {
+                {new Date(word.createdAt).toLocaleDateString(["de"], {
                   dateStyle: "short",
                 })}
               </div>
@@ -45,7 +59,12 @@ export function WordList(props: WordListProps) {
                   name="wordToDelete"
                   value={word.original}
                 />
-                <button class="delete" type="submit"></button>
+                <button
+                  class="delete"
+                  type="submit"
+                  onClick={(e) => onDelete(e, word.original)}
+                >
+                </button>
               </form>
             </td>
           </tr>

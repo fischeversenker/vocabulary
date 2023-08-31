@@ -1,21 +1,34 @@
-import { IS_BROWSER } from "$fresh/runtime.ts";
 import { createRef } from "preact";
-import { useEffect } from "preact/hooks";
+import { Word } from "../routes/index.tsx";
+import { wordList } from "../utils/words.ts";
 
 export function NewWord() {
-  const ref = createRef();
+  const originalRef = createRef();
+  const translationRef = createRef();
 
-  useEffect(() => {
-    if (!IS_BROWSER) {
-      return;
-    }
+  async function onSubmit(e: Event) {
+    e.preventDefault();
+    const original = originalRef.current.value;
+    const translation = translationRef.current.value;
 
-    const url = new URL(window.location.href);
+    const newWord = {
+      original,
+      translation,
+    };
 
-    if (url?.searchParams.get("focused")) {
-      ref.current?.focus();
-    }
-  });
+    await fetch(`/api/words/${original}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newWord),
+    });
+    const words = await fetch("/api/words");
+    wordList.value = await words.json() as Word[];
+
+    originalRef.current.value = "";
+    translationRef.current.value = "";
+  }
 
   return (
     <form
@@ -29,7 +42,7 @@ export function NewWord() {
         name="original"
         placeholder="Original"
         required
-        ref={ref}
+        ref={originalRef}
       />
       <input
         class="input"
@@ -37,8 +50,13 @@ export function NewWord() {
         name="translation"
         placeholder="Translation"
         required
+        ref={translationRef}
       />
-      <button class="button is-primary has-text-weight-bold" type="submit">
+      <button
+        class="button is-primary has-text-weight-bold"
+        type="submit"
+        onClick={(e) => onSubmit(e)}
+      >
         +
       </button>
     </form>

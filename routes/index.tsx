@@ -1,6 +1,7 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
 import { NewWord } from "../islands/NewWord.tsx";
-import { WordList } from "../components/WordList.tsx";
+import { WordList } from "../islands/WordList.tsx";
+import { wordList } from "../utils/words.ts";
 
 interface Data {
   knownWords: Word[];
@@ -12,42 +13,27 @@ export interface Word {
   createdAt: Date;
 }
 
-const KV_PATH = ["fischeversenker", "bulgarian", "words"] as const;
+export const WORD_DATA_KV_PATH = [
+  "fischeversenker",
+  "bulgarian",
+  "words",
+] as const;
 
 export const handler: Handlers<Data> = {
   async GET(_, ctx) {
     const kv = await Deno.openKv();
-    const knownWordsKv = await kv.get<Word[]>(KV_PATH);
-    const knownWords = knownWordsKv.value ?? [];
 
-    return await ctx.render({ knownWords });
-  },
-  async POST(req) {
-    const form = await req.formData();
-    const original = form.get("original") as string;
-    const translation = form.get("translation") as string;
-    const wordToDelete = form.get("wordToDelete") as string;
+    const words = kv.list({ prefix: [...WORD_DATA_KV_PATH] });
 
-    const kv = await Deno.openKv();
-    const knownWordsKv = await kv.get<Word[]>(KV_PATH);
-    let knownWords = knownWordsKv.value ?? [];
-    let focusNewWord = false;
-
-    if (wordToDelete) {
-      knownWords = knownWords.filter((word) => word.original !== wordToDelete);
-    } else if (original && translation) {
-      knownWords.push({ original, translation, createdAt: new Date() });
-      focusNewWord = true;
-    } else {
-      throw new Error("Invalid POST request");
+    const wordValues: Word[] = [];
+    for await (const word of words) {
+      wordValues.push(word.value as Word);
     }
 
-    await kv.set(KV_PATH, knownWords);
+    const knownWords = wordValues;
+    wordList.value = knownWords;
 
-    return new Response(null, {
-      status: 302,
-      headers: { location: `/${focusNewWord ? "?focused=true" : ""}` },
-    });
+    return await ctx.render({ knownWords });
   },
 };
 
@@ -56,7 +42,7 @@ export default function Home({ data }: PageProps<Data>) {
     <div class="container is-max-desktop">
       <NewWord></NewWord>
       <div class="block">
-        <WordList words={data.knownWords}></WordList>
+        <WordList></WordList>
       </div>
     </div>
   );
