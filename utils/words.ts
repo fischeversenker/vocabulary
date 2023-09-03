@@ -12,7 +12,7 @@ export const WORD_DATA_KV_PATH = [
 export interface Word {
   original: string;
   translation: string;
-  createdAt: Date;
+  createdAt: string;
 }
 
 export async function getWordList(): Promise<Word[]> {
@@ -53,7 +53,7 @@ export async function createWord(rawWord: Word): Promise<Word> {
   const word = {
     original: rawWord.original,
     translation: rawWord.translation,
-    createdAt: new Date(),
+    createdAt: rawWord.createdAt ?? new Date().toISOString(),
   };
 
   kv.atomic().set([...WORD_DATA_KV_PATH, rawWord.original], word).commit();

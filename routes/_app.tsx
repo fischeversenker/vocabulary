@@ -7,14 +7,19 @@ export default function App({ Component }: AppProps) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>vocabulary</title>
+        <title>Vocabulary</title>
         <link rel="stylesheet" href="/bulma.min.css" />
       </head>
       <body>
         <Header />
-        <main style="padding:1rem;">
-          <Component />
-        </main>
+        <section
+          class="section"
+          style="padding-inline: 0.7rem; padding-block-start: 1rem;"
+        >
+          <div class="container is-max-desktop">
+            <Component />
+          </div>
+        </section>
       </body>
     </html>
   );

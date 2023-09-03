@@ -9,7 +9,8 @@ import * as $3 from "./routes/api/words/[wordId].ts";
 import * as $4 from "./routes/index.tsx";
 import * as $5 from "./routes/word/[word].tsx";
 import * as $$0 from "./islands/NewWord.tsx";
-import * as $$1 from "./islands/WordList.tsx";
+import * as $$1 from "./islands/WordDetail.tsx";
+import * as $$2 from "./islands/WordList.tsx";
 
 const manifest = {
   routes: {
@@ -22,7 +23,8 @@ const manifest = {
   },
   islands: {
     "./islands/NewWord.tsx": $$0,
-    "./islands/WordList.tsx": $$1,
+    "./islands/WordDetail.tsx": $$1,
+    "./islands/WordList.tsx": $$2,
   },
   baseUrl: import.meta.url,
 };

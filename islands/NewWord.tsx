@@ -37,7 +37,7 @@ export function NewWord({ knownWords }: NewWordProps) {
   return (
     <form
       class="block"
-      style="display:flex;gap:0.5rem;padding-top:1rem;"
+      style="display:flex;gap:0.5rem;"
       method="POST"
     >
       <input
