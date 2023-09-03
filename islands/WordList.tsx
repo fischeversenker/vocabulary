@@ -1,14 +1,11 @@
-import { useEffect } from "preact/hooks";
-import { Word } from "../routes/index.tsx";
-import { wordList } from "../utils/words.ts";
+import { Signal } from "@preact/signals";
+import { Word } from "../utils/words.ts";
 
-export function WordList() {
-  useEffect(() => {
-    fetch("/api/words").then(async (words) => {
-      wordList.value = await words.json() as Word[];
-    });
-  }, []);
+interface WordListProps {
+  knownWords: Signal<Word[]>;
+}
 
+export function WordList({ knownWords }: WordListProps) {
   async function onDelete(e: Event, word: string) {
     e.preventDefault();
 
@@ -16,11 +13,11 @@ export function WordList() {
       method: "DELETE",
     });
     const words = await fetch("/api/words");
-    wordList.value = await words.json() as Word[];
+    knownWords.value = await words.json() as Word[];
   }
 
   return (
-    <table class="table is-striped is-fullwidth is-narrow">
+    <table class="table is-striped is-fullwidth is-narrow block">
       <thead>
         <tr>
           <th>
@@ -37,10 +34,10 @@ export function WordList() {
         </tr>
       </thead>
       <tbody>
-        {wordList.value.map((word) => (
+        {knownWords.value.map((word) => (
           <tr>
             <th>
-              {word.original}
+              <a href={`/word/${word.original}`}>{word.original}</a>
             </th>
             <td style="word-break:break-all;">
               {word.translation}
