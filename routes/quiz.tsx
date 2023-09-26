@@ -4,6 +4,7 @@ export default async function Quiz(req: Request) {
   const requestUrl = new URL(req.url);
   const reveal = requestUrl.searchParams.has("reveal");
   const showOriginal = reveal || Math.random() > 0.5;
+  const showTranslation = reveal || !showOriginal;
 
   let quizWord: Word;
   if (requestUrl.searchParams.has("word")) {
@@ -15,24 +16,24 @@ export default async function Quiz(req: Request) {
   return (
     <>
       <p class="block">
-        {showOriginal ? "Original:" : "Translation:"}{" "}
-        {showOriginal ? quizWord.original : quizWord.translation}
+        Original: {showOriginal ? quizWord.original : "*********"}
+        <br />
+        Translation: {showTranslation ? quizWord.translation : "*********"}
       </p>
-      {reveal && (
-        <p class="block">
-          {showOriginal ? "Translation:" : "Original:"}{" "}
-          {showOriginal ? quizWord.translation : quizWord.original}
-        </p>
-      )}
 
       <div class="field is-grouped block">
+        {!reveal && (
+          <p class="control">
+            <a
+              href={`?word=${quizWord.original}&reveal`}
+              class="button is-link"
+            >
+              Reveal
+            </a>
+          </p>
+        )}
         <p class="control">
-          <a href={`?word=${quizWord.original}&reveal`} class="button is-link">
-            Reveal
-          </a>
-        </p>
-        <p class="control">
-          <a href="/quiz" class="button is-link">Next</a>
+          <a href="/quiz" class="button is-link">Next Word</a>
         </p>
       </div>
     </>

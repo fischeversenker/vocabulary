@@ -21,10 +21,10 @@ export function WordList({ knownWords }: WordListProps) {
       <thead>
         <tr>
           <th>
-            <abbr title="Original">Orig</abbr>
+            Original
           </th>
           <th>
-            <abbr title="Translation">Trans</abbr>
+            Translation
           </th>
           <th>
             Added
