@@ -37,10 +37,10 @@ export function WordList({ knownWords }: WordListProps) {
         {knownWords.value.map((word) => (
           <tr>
             <th>
-              <a href={`/word/${word.original}`}>{word.original}</a>
+              <a href={`/words/${word.original}`}>{word.original}</a>
             </th>
             <td style="word-break:break-all;">
-              {word.translation}
+              <a href={`/words/${word.original}`}>{word.translation}</a>
             </td>
             <td>
               <div class="has-text-grey-light">
