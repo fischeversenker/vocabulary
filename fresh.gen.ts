@@ -7,7 +7,8 @@ import * as $1 from "./routes/_app.tsx";
 import * as $2 from "./routes/api/words.ts";
 import * as $3 from "./routes/api/words/[wordId].ts";
 import * as $4 from "./routes/index.tsx";
-import * as $5 from "./routes/word/[word].tsx";
+import * as $5 from "./routes/quiz.tsx";
+import * as $6 from "./routes/words/[word].tsx";
 import * as $$0 from "./islands/NewWord.tsx";
 import * as $$1 from "./islands/WordDetail.tsx";
 import * as $$2 from "./islands/WordList.tsx";
@@ -19,7 +20,8 @@ const manifest = {
     "./routes/api/words.ts": $2,
     "./routes/api/words/[wordId].ts": $3,
     "./routes/index.tsx": $4,
-    "./routes/word/[word].tsx": $5,
+    "./routes/quiz.tsx": $5,
+    "./routes/words/[word].tsx": $6,
   },
   islands: {
     "./islands/NewWord.tsx": $$0,

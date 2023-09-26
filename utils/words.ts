@@ -44,6 +44,15 @@ export async function getWord(wordId: string): Promise<Word> {
   return word.value;
 }
 
+export async function getNextQuizWord(): Promise<Word> {
+  if (IS_BROWSER) {
+    throw new Error("getNextQuizWord() should not be called in the browser");
+  }
+
+  const wordList = await getWordList();
+  return wordList.at(Math.floor(Math.random() * wordList.length))!;
+}
+
 export async function createWord(rawWord: Word): Promise<Word> {
   if (IS_BROWSER) {
     throw new Error("createWord() should not be called in the browser");
