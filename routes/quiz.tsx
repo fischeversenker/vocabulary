@@ -15,11 +15,26 @@ export default async function Quiz(req: Request) {
 
   return (
     <>
-      <p class="block">
-        Original: {showOriginal ? quizWord.original : "*********"}
-        <br />
-        Translation: {showTranslation ? quizWord.translation : "*********"}
-      </p>
+      <table class="table is-narrow is-narrow block">
+        <tbody>
+          <tr>
+            <th>Original</th>
+            <td>
+              <a href={`/words/${quizWord.original}`}>
+                {showOriginal ? quizWord.original : "*********"}
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <th>Translation</th>
+            <td>
+              <a href={`/words/${quizWord.original}`}>
+                {showTranslation ? quizWord.translation : "*********"}
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
       <div class="field is-grouped block">
         {!reveal && (
