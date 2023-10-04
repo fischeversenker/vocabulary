@@ -12,7 +12,6 @@ export function WordDetail({ word }: WordDetailProps) {
 
   async function onSaveChanges(e: Event) {
     e.preventDefault();
-    console.log(word.createdAt);
 
     const translation = translationRef.current.textContent;
 
@@ -57,6 +56,11 @@ export function WordDetail({ word }: WordDetailProps) {
           {word.translation}
         </i>
       </div>
+
+      <div className="block">
+        <pre>{JSON.stringify(word.history, null, 2)}</pre>
+      </div>
+
       <div class="block has-text-grey">
         <i>Added:</i> {new Date(word.createdAt).toLocaleString("de-DE")}
       </div>

@@ -1,0 +1,12 @@
+import { HandlerContext } from "$fresh/server.ts";
+import { addQuizEntry } from "../../../utils/words.ts";
+
+export const handler = {
+  async PATCH(req: Request, ctx: HandlerContext) {
+    const { certainty } = await req.json() as { certainty: number };
+
+    await addQuizEntry(ctx.params.wordId, certainty);
+
+    return new Response("OK", { status: 200 });
+  },
+};

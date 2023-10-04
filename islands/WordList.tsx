@@ -6,16 +6,6 @@ interface WordListProps {
 }
 
 export function WordList({ knownWords }: WordListProps) {
-  async function onDelete(e: Event, word: string) {
-    e.preventDefault();
-
-    await fetch(`/api/words/${word}`, {
-      method: "DELETE",
-    });
-    const words = await fetch("/api/words");
-    knownWords.value = await words.json() as Word[];
-  }
-
   return (
     <table class="table is-striped is-fullwidth is-narrow block">
       <thead>
@@ -28,8 +18,6 @@ export function WordList({ knownWords }: WordListProps) {
           </th>
           <th>
             Added
-          </th>
-          <th>
           </th>
         </tr>
       </thead>
@@ -48,21 +36,6 @@ export function WordList({ knownWords }: WordListProps) {
                   dateStyle: "short",
                 })}
               </div>
-            </td>
-            <td>
-              <form method="POST">
-                <input
-                  type="hidden"
-                  name="wordToDelete"
-                  value={word.original}
-                />
-                <button
-                  class="delete"
-                  type="submit"
-                  onClick={(e) => onDelete(e, word.original)}
-                >
-                </button>
-              </form>
             </td>
           </tr>
         ))}

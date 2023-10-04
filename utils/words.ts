@@ -13,6 +13,12 @@ export interface Word {
   original: string;
   translation: string;
   createdAt: string;
+  history?: QuizHistoryEntry[];
+}
+
+interface QuizHistoryEntry {
+  date: number;
+  certainty: number;
 }
 
 export async function getWordList(): Promise<Word[]> {
@@ -59,10 +65,11 @@ export async function createWord(rawWord: Word): Promise<Word> {
   }
 
   const kv = await Deno.openKv();
-  const word = {
+  const word: Word = {
     original: rawWord.original,
     translation: rawWord.translation,
     createdAt: rawWord.createdAt ?? new Date().toISOString(),
+    history: [],
   };
 
   kv.atomic().set([...WORD_DATA_KV_PATH, rawWord.original], word).commit();
@@ -79,4 +86,31 @@ export async function deleteWord(wordId: string): Promise<boolean> {
 
   kv.atomic().delete(wordPath).commit();
   return true;
+}
+
+export async function addQuizEntry(wordId: string, certainty: number) {
+  if (IS_BROWSER) {
+    throw new Error("addQuizEntry() should not be called in the browser");
+  }
+
+  const kv = await Deno.openKv();
+  const wordPath = [...WORD_DATA_KV_PATH, wordId];
+
+  const word = await kv.get<Word>(wordPath);
+  if (!word.value) {
+    throw new Error("Word not found");
+  }
+
+  const newWord = {
+    ...word.value,
+    history: [
+      ...(word.value.history ?? []),
+      {
+        date: Date.now(),
+        certainty,
+      },
+    ],
+  };
+
+  kv.atomic().set(wordPath, newWord).commit();
 }
