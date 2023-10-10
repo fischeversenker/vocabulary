@@ -1,7 +1,8 @@
 import { AppProps } from "$fresh/server.ts";
 import { Header } from "../components/Header.tsx";
 
-export default function App({ Component }: AppProps) {
+export default function App({ Component, route }: AppProps) {
+
   return (
     <html>
       <head>
@@ -11,7 +12,7 @@ export default function App({ Component }: AppProps) {
         <link rel="stylesheet" href="/bulma.min.css" />
       </head>
       <body>
-        <Header />
+        <Header activeRoute={route}/>
         <section
           class="section"
           style="padding-inline: 0.7rem; padding-block-start: 1rem;"
