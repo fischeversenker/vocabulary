@@ -3,10 +3,10 @@ import { Certainty, Word } from "../utils/words.ts";
 
 interface NewWordProps {
   word: Word;
+  showOriginal: boolean;
 }
 
-export function QuizWord({ word }: NewWordProps) {
-  const showOriginal = Math.random() > 0.5;
+export function QuizWord({ word, showOriginal }: NewWordProps) {
   const showTranslation = !showOriginal;
 
   const isRevealed = useSignal(false);
