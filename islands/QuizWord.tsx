@@ -1,5 +1,5 @@
 import { useSignal } from "@preact/signals";
-import { Word } from "../utils/words.ts";
+import { Certainty, Word } from "../utils/words.ts";
 
 interface NewWordProps {
   word: Word;
@@ -16,7 +16,7 @@ export function QuizWord({ word }: NewWordProps) {
     isRevealed.value = true;
   }
 
-  async function answer(certainty: 1 | 2 | 3) {
+  async function answer(certainty: Certainty) {
     await fetch(`/api/quiz/${word.original}`, {
       method: "PATCH",
       body: JSON.stringify({

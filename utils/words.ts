@@ -9,6 +9,8 @@ export const WORD_DATA_KV_PATH = [
   "words",
 ] as const;
 
+export type Certainty = 1 | 2 | 3;
+
 export interface Word {
   original: string;
   translation: string;
@@ -18,7 +20,7 @@ export interface Word {
 
 interface QuizHistoryEntry {
   date: number;
-  certainty: number;
+  certainty: Certainty;
 }
 
 export async function getWordList(): Promise<Word[]> {
@@ -50,15 +52,6 @@ export async function getWord(wordId: string): Promise<Word> {
   return word.value;
 }
 
-export async function getNextQuizWord(): Promise<Word> {
-  if (IS_BROWSER) {
-    throw new Error("getNextQuizWord() should not be called in the browser");
-  }
-
-  const wordList = await getWordList();
-  return wordList.at(Math.floor(Math.random() * wordList.length))!;
-}
-
 export async function createWord(rawWord: Word): Promise<Word> {
   if (IS_BROWSER) {
     throw new Error("createWord() should not be called in the browser");
@@ -88,7 +81,7 @@ export async function deleteWord(wordId: string): Promise<boolean> {
   return true;
 }
 
-export async function addQuizEntry(wordId: string, certainty: number) {
+export async function addQuizEntry(wordId: string, certainty: Certainty) {
   if (IS_BROWSER) {
     throw new Error("addQuizEntry() should not be called in the browser");
   }
@@ -113,4 +106,28 @@ export async function addQuizEntry(wordId: string, certainty: number) {
   };
 
   kv.atomic().set(wordPath, newWord).commit();
+}
+
+export async function getNextQuizWord(): Promise<Word> {
+  if (IS_BROWSER) {
+    throw new Error("getNextQuizWord() should not be called in the browser");
+  }
+
+  const wordList = await getWordList();
+
+  const wordUrgency = wordList.map((word) => {
+    const lastEntry = word.history?.at(-1);
+
+    if (!lastEntry) {
+      return { word, urgency: Infinity };
+    }
+
+    const secondsSinceLastQuiz = Math.floor(
+      (Date.now() - lastEntry.date) / (1000),
+    );
+
+    return { word, urgency: secondsSinceLastQuiz / lastEntry.certainty };
+  }).sort((a, b) => b.urgency - a.urgency);
+
+  return wordUrgency.at(0)!.word;
 }
