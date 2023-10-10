@@ -1,14 +1,16 @@
-import { RouteContext } from "$fresh/server.ts";
 import { QuizWord } from "../islands/QuizWord.tsx";
+import { getSettings, saveSettings } from "../utils/settings.ts";
 import { getNextQuizWord } from "../utils/words.ts";
 
-export default async function Quiz(_req: Request, ctx: RouteContext) {
-  const url = new URL(_req.url);
-  let showOriginal = window.localStorage.getItem('showOriginal') === 'true';
+export default async function Quiz(req: Request) {
+  const url = new URL(req.url);
+
+  const userSettings = await getSettings();
+
+  let showOriginal = userSettings.showOriginal ?? false;
   if (url.searchParams.has('original')) {
     showOriginal = url.searchParams.get('original') === 'true';
-    // TODO: might want to turn this into KV for consistency
-    localStorage.setItem('showOriginal', showOriginal.toString());
+    await saveSettings({ showOriginal });
   }
 
   return <QuizWord word={await getNextQuizWord()} showOriginal={showOriginal} />;

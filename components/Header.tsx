@@ -3,9 +3,6 @@ interface HeaderProps {
 }
 
 export function Header({ activeRoute }: HeaderProps) {
-  if (activeRoute === '/quiz' && window.localStorage.getItem('showOriginal')) {
-    activeRoute += `?original=${window.localStorage.getItem('showOriginal')}`
-  };
   return (
     <nav
       class="navbar is-info has-shadow"
