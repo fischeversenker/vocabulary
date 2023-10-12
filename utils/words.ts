@@ -33,23 +33,26 @@ export async function getWordList(): Promise<WordWithUrgency[]> {
   }
 
   const kv = await Deno.openKv();
-  const words = kv.list<Word>({ prefix: [...WORD_DATA_KV_PATH] });
+  const words = kv.list<Word>({ prefix: [...WORD_DATA_KV_PATH] } );
 
   const wordValues: WordWithUrgency[] = [];
-  const maxUrgency = wordList.value.reduce(
-    (max, word) => Math.max(getWordUrgency(word), max),
-    0,
-  );
-  console.log({ maxUrgency });
+  let maxUrgency = 0;
   for await (const word of words) {
+    const wordUrgency = getWordUrgency(word.value);
     const wordWithUrgency = {
       ...word.value,
-      urgency: getWordUrgency(word.value) / maxUrgency,
+      urgency: wordUrgency,
     };
+    maxUrgency = Math.max(getWordUrgency(word.value), maxUrgency);
     wordValues.push(wordWithUrgency);
   }
 
-  return wordValues;
+  const wordValuesWithUrgency = wordValues.map((word) => ({
+    ...word,
+    urgency: word.urgency / maxUrgency,
+  }));
+
+  return wordValuesWithUrgency;
 }
 
 export async function getWord(wordId: string): Promise<Word> {
@@ -123,7 +126,7 @@ export async function addQuizEntry(wordId: string, certainty: Certainty) {
 
 export async function getMostUrgentWord(): Promise<WordWithUrgency> {
   if (IS_BROWSER) {
-    throw new Error("getNextQuizWord() should not be called in the browser");
+    throw new Error("getMostUrgentWord() should not be called in the browser");
   }
 
   const wordList = await getWordList();
@@ -146,7 +149,6 @@ function getWordUrgency(word: Word): number {
   const secondsSinceLastQuiz = Math.floor(
     (Date.now() - lastEntry.date) / (1000),
   );
-  console.log({ word, lastEntry, secondsSinceLastQuiz, urgency: Math.floor(secondsSinceLastQuiz / lastEntry.certainty) });
 
   return Math.floor(secondsSinceLastQuiz / lastEntry.certainty);
 }
