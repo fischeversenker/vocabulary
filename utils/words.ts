@@ -140,11 +140,12 @@ export async function getMostUrgentWord(): Promise<WordWithUrgency> {
   return wordUrgency.at(0)!.word;
 }
 
+// TODO: This is a very simple urgency calculation. It should be improved.
 function getWordUrgency(word: Word): number {
   const lastEntry = word.history?.at(-1);
 
   if (!lastEntry) {
-    return Infinity;
+    return 100_000_000;
   }
 
   const secondsSinceLastQuiz = Math.floor(
