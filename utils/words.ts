@@ -44,7 +44,6 @@ export async function getWordList(): Promise<WordWithUrgency[]> {
       urgency: wordUrgency,
     };
     maxUrgency = Math.max(getWordUrgency(word.value), maxUrgency);
-    console.log('new maxUrgency', maxUrgency);
     wordValues.push(wordWithUrgency);
   }
 
