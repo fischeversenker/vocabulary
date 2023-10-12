@@ -1,8 +1,8 @@
 import { useSignal } from "@preact/signals";
-import { Certainty, Word } from "../utils/words.ts";
+import { Certainty, WordWithUrgency } from "../utils/words.ts";
 
 interface NewWordProps {
-  word: Word;
+  word: WordWithUrgency;
   showOriginal: boolean;
 }
 
@@ -28,26 +28,19 @@ export function QuizWord({ word, showOriginal }: NewWordProps) {
 
   return (
     <>
-      <table class="table is-narrow is-narrow block">
-        <tbody>
-          <tr>
-            <th>Original</th>
-            <td>
-              {(isRevealed.value || showOriginal) ? word.original : "*********"}
-            </td>
-          </tr>
-          <tr>
-            <th>Translation</th>
-            <td>
-              {(isRevealed.value || showTranslation)
-                ? word.translation
-                : "*********"}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="is-flex is-flex-direction-column has-text-centered py-6">
+        <div class="is-size-3 has-text-weight-bold">
+            {(isRevealed.value || showOriginal) ? word.original : "*********"}
+        </div>
+        <hr />
+        <div class="is-size-3 has-text-weight-semibold">
+          {(isRevealed.value || showTranslation)
+            ? word.translation
+            : "*********"}
+        </div>
+      </div>
 
-      <div class="field is-grouped block">
+      <div class="field is-grouped block is-justify-content-center">
         {!isRevealed.value && (
           <p class="control">
             <button
@@ -61,17 +54,17 @@ export function QuizWord({ word, showOriginal }: NewWordProps) {
         {isRevealed.value && (
           <div class="field has-addons">
             <p class="control">
-              <button class="button is-danger" onClick={() => answer(1)}>
+              <button class="button is-danger is-light" onClick={() => answer(1)}>
                 What?!
               </button>
             </p>
             <p class="control">
-              <button class="button is-warning" onClick={() => answer(2)}>
+              <button class="button is-warning is-light" onClick={() => answer(2)}>
                 Yeah, right.
               </button>
             </p>
             <p class="control">
-              <button class="button is-success" onClick={() => answer(3)}>
+              <button class="button is-success is-light" onClick={() => answer(3)}>
                 Yes!
               </button>
             </p>

@@ -57,13 +57,6 @@ export function WordDetail({ word }: WordDetailProps) {
         </i>
       </div>
 
-      <details>
-        <summary>Quiz History</summary>
-        <div className="block">
-          <pre>{JSON.stringify(word.history, null, 2)}</pre>
-        </div>
-      </details>
-
       <div class="block has-text-grey">
         <i>Added:</i> {new Date(word.createdAt).toLocaleString("de-DE")}
       </div>

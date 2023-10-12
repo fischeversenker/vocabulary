@@ -1,8 +1,8 @@
 import { Signal } from "@preact/signals";
-import { Word } from "../utils/words.ts";
+import { WordWithUrgency } from "../utils/words.ts";
 
 interface WordListProps {
-  knownWords: Signal<Word[]>;
+  knownWords: Signal<WordWithUrgency[]>;
 }
 
 export function WordList({ knownWords }: WordListProps) {
@@ -17,7 +17,7 @@ export function WordList({ knownWords }: WordListProps) {
             Translation
           </th>
           <th>
-            Added
+            Urgency
           </th>
         </tr>
       </thead>
@@ -32,9 +32,11 @@ export function WordList({ knownWords }: WordListProps) {
             </td>
             <td>
               <div class="has-text-grey-light">
-                {new Date(word.createdAt).toLocaleDateString(["de"], {
-                  dateStyle: "short",
-                })}
+                <progress
+                  class="progress is-small"
+                  value={word.urgency}
+                  max="1"
+                />
               </div>
             </td>
           </tr>

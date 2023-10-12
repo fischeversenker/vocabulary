@@ -1,6 +1,6 @@
 import { QuizWord } from "../islands/QuizWord.tsx";
 import { getSettings, saveSettings } from "../utils/settings.ts";
-import { getNextQuizWord } from "../utils/words.ts";
+import { getMostUrgentWord } from "../utils/words.ts";
 
 export default async function Quiz(req: Request) {
   const url = new URL(req.url);
@@ -13,5 +13,5 @@ export default async function Quiz(req: Request) {
     await saveSettings({ showOriginal });
   }
 
-  return <QuizWord word={await getNextQuizWord()} showOriginal={showOriginal} />;
+  return <QuizWord word={await getMostUrgentWord()} showOriginal={showOriginal} />;
 }

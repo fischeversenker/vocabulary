@@ -18,22 +18,34 @@ export interface Word {
   history?: QuizHistoryEntry[];
 }
 
+export interface WordWithUrgency extends Word {
+  urgency: number;
+}
+
 interface QuizHistoryEntry {
   date: number;
   certainty: Certainty;
 }
 
-export async function getWordList(): Promise<Word[]> {
+export async function getWordList(): Promise<WordWithUrgency[]> {
   if (IS_BROWSER) {
     throw new Error("getWordList() should not be called in the browser");
   }
 
   const kv = await Deno.openKv();
-  const words = kv.list({ prefix: [...WORD_DATA_KV_PATH] });
+  const words = kv.list<Word>({ prefix: [...WORD_DATA_KV_PATH] });
 
-  const wordValues: Word[] = [];
+  const wordValues: WordWithUrgency[] = [];
+  const maxUrgency = wordList.value.reduce(
+    (max, word) => Math.max(getWordUrgency(word), max),
+    0,
+  );
   for await (const word of words) {
-    wordValues.push(word.value as Word);
+    const wordWithUrgency = {
+      ...word.value,
+      urgency: getWordUrgency(word.value) / maxUrgency,
+    };
+    wordValues.push(wordWithUrgency);
   }
 
   return wordValues;
@@ -108,26 +120,31 @@ export async function addQuizEntry(wordId: string, certainty: Certainty) {
   kv.atomic().set(wordPath, newWord).commit();
 }
 
-export async function getNextQuizWord(): Promise<Word> {
+export async function getMostUrgentWord(): Promise<WordWithUrgency> {
   if (IS_BROWSER) {
     throw new Error("getNextQuizWord() should not be called in the browser");
   }
 
   const wordList = await getWordList();
 
-  const wordUrgency = wordList.map((word) => {
-    const lastEntry = word.history?.at(-1);
-
-    if (!lastEntry) {
-      return { word, urgency: Infinity };
-    }
-
-    const secondsSinceLastQuiz = Math.floor(
-      (Date.now() - lastEntry.date) / (1000),
-    );
-
-    return { word, urgency: secondsSinceLastQuiz / lastEntry.certainty };
-  }).sort((a, b) => b.urgency - a.urgency);
+  const wordUrgency = wordList.map((word) => ({
+    word,
+    urgency: getWordUrgency(word),
+  })).sort((a, b) => b.urgency - a.urgency);
 
   return wordUrgency.at(0)!.word;
+}
+
+function getWordUrgency(word: Word): number {
+  const lastEntry = word.history?.at(-1);
+
+  if (!lastEntry) {
+    return Infinity;
+  }
+
+  const secondsSinceLastQuiz = Math.floor(
+    (Date.now() - lastEntry.date) / (1000),
+  );
+
+  return Math.floor(secondsSinceLastQuiz / lastEntry.certainty);
 }
