@@ -25,7 +25,7 @@ export function WordList({ knownWords }: WordListProps) {
         {knownWords.value.map((word) => (
           <tr>
             <th>
-              <a href={`/words/${word.original}`}>{word.original}</a> ({JSON.stringify(word.createdAt)})
+              <a href={`/words/${word.original}`}>{word.original}</a>
             </th>
             <td style="word-break:break-all;">
               <a href={`/words/${word.original}`}>{word.translation}</a>

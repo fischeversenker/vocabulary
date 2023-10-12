@@ -14,7 +14,7 @@ export type Certainty = 1 | 2 | 3;
 export interface Word {
   original: string;
   translation: string;
-  createdAt: string;
+  createdAt: number;
   history?: QuizHistoryEntry[];
 }
 
@@ -77,7 +77,7 @@ export async function createWord(rawWord: Word): Promise<Word> {
   const word: Word = {
     original: rawWord.original,
     translation: rawWord.translation,
-    createdAt: rawWord.createdAt ?? new Date().toISOString(),
+    createdAt: rawWord.createdAt ?? Date.now(),
     history: [],
   };
 
@@ -139,17 +139,13 @@ export async function getMostUrgentWord(): Promise<WordWithUrgency> {
   return wordUrgency.at(0)!.word;
 }
 
-// TODO: This is a very simple urgency calculation. It should be improved.
 function getWordUrgency(word: Word): number {
   const lastEntry = word.history?.at(-1);
 
-  if (!lastEntry) {
-    return 100_000_000;
-  }
-
+  // falls back to createdAt if no history is available
   const secondsSinceLastQuiz = Math.floor(
-    (Date.now() - lastEntry.date) / (1000),
+    (Date.now() - (lastEntry?.date ?? word.createdAt)) / (1000),
   );
 
-  return Math.floor(secondsSinceLastQuiz / lastEntry.certainty);
+  return Math.floor(secondsSinceLastQuiz / (lastEntry?.certainty ?? 1));
 }
