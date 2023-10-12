@@ -30,7 +30,7 @@ export function QuizWord({ word, showOriginal }: NewWordProps) {
     <>
       <div class="is-flex is-flex-direction-column has-text-centered py-6">
         <div class="is-size-3 has-text-weight-bold">
-            {(isRevealed.value || showOriginal) ? word.original : "*********"}
+          {(isRevealed.value || showOriginal) ? word.original : "*********"}
         </div>
         <hr />
         <div class="is-size-3 has-text-weight-semibold">
@@ -54,17 +54,26 @@ export function QuizWord({ word, showOriginal }: NewWordProps) {
         {isRevealed.value && (
           <div class="field has-addons">
             <p class="control">
-              <button class="button is-danger is-light" onClick={() => answer(1)}>
+              <button
+                class="button is-danger is-light"
+                onClick={() => answer(1)}
+              >
                 What?!
               </button>
             </p>
             <p class="control">
-              <button class="button is-warning is-light" onClick={() => answer(2)}>
+              <button
+                class="button is-warning is-light"
+                onClick={() => answer(2)}
+              >
                 Yeah, right.
               </button>
             </p>
             <p class="control">
-              <button class="button is-success is-light" onClick={() => answer(3)}>
+              <button
+                class="button is-success is-light"
+                onClick={() => answer(3)}
+              >
                 Yes!
               </button>
             </p>

@@ -146,6 +146,7 @@ function getWordUrgency(word: Word): number {
   const secondsSinceLastQuiz = Math.floor(
     (Date.now() - lastEntry.date) / (1000),
   );
+  console.log({ word, lastEntry });
 
   return Math.floor(secondsSinceLastQuiz / lastEntry.certainty);
 }

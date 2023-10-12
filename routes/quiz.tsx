@@ -8,10 +8,12 @@ export default async function Quiz(req: Request) {
   const userSettings = await getSettings();
 
   let showOriginal = userSettings.showOriginal ?? false;
-  if (url.searchParams.has('original')) {
-    showOriginal = url.searchParams.get('original') === 'true';
+  if (url.searchParams.has("original")) {
+    showOriginal = url.searchParams.get("original") === "true";
     await saveSettings({ showOriginal });
   }
 
-  return <QuizWord word={await getMostUrgentWord()} showOriginal={showOriginal} />;
+  return (
+    <QuizWord word={await getMostUrgentWord()} showOriginal={showOriginal} />
+  );
 }
