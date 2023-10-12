@@ -40,6 +40,7 @@ export async function getWordList(): Promise<WordWithUrgency[]> {
     (max, word) => Math.max(getWordUrgency(word), max),
     0,
   );
+  console.log({ maxUrgency });
   for await (const word of words) {
     const wordWithUrgency = {
       ...word.value,
