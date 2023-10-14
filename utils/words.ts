@@ -139,7 +139,7 @@ export async function getMostUrgentWord(): Promise<WordWithUrgency> {
   return wordUrgency.at(0)!.word;
 }
 
-function getWordUrgency(word: Word): number {
+export function getWordUrgency(word: Word): number {
   const lastEntry = word.history?.at(-1);
 
   // falls back to createdAt if no history is available
@@ -147,5 +147,5 @@ function getWordUrgency(word: Word): number {
     (Date.now() - (lastEntry?.date ?? word.createdAt)) / (1000),
   );
 
-  return Math.floor(secondsSinceLastQuiz / (lastEntry?.certainty ?? 1));
+  return Math.floor(secondsSinceLastQuiz / Math.pow((lastEntry?.certainty ?? 1), 2));
 }
