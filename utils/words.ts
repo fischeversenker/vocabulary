@@ -155,9 +155,14 @@ export function getWordUrgency(word: Word): number {
     (Date.now() - (lastEntry?.date ?? word.createdAt)) / (1000),
   );
 
-  const urgency = Math.floor(
-    secondsSinceLastQuiz / Math.pow(averageCertainty, 2),
-  );
+  // the urgency formula was:
+  // z = x / y^2
+  // Math.floor(
+  //   secondsSinceLastQuiz / (Math.pow(averageCertainty, 4)),
+  // );
+
+  const urgency = 100 - (Math.pow(averageCertainty, 4) /
+    (1 + Math.pow(secondsSinceLastQuiz / 1000, 1)));
 
   // console.log("urgency", urgency);
 
