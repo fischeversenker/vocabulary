@@ -15,7 +15,7 @@ export interface Word {
   original: string;
   translation: string;
   createdAt: number;
-  history?: QuizHistoryEntry[];
+  history: QuizHistoryEntry[];
 }
 
 export interface WordWithUrgency extends Word {
@@ -33,7 +33,7 @@ export async function getWordList(): Promise<WordWithUrgency[]> {
   }
 
   const kv = await Deno.openKv();
-  const words = kv.list<Word>({ prefix: [...WORD_DATA_KV_PATH] } );
+  const words = kv.list<Word>({ prefix: [...WORD_DATA_KV_PATH] });
 
   const wordValues: WordWithUrgency[] = [];
   let maxUrgency = 0;
@@ -43,7 +43,7 @@ export async function getWordList(): Promise<WordWithUrgency[]> {
       ...word.value,
       urgency: wordUrgency,
     };
-    maxUrgency = Math.max(getWordUrgency(word.value), maxUrgency);
+    maxUrgency = Math.max(wordUrgency, maxUrgency);
     wordValues.push(wordWithUrgency);
   }
 
@@ -134,18 +134,51 @@ export async function getMostUrgentWord(): Promise<WordWithUrgency> {
   const wordUrgency = wordList.map((word) => ({
     word,
     urgency: getWordUrgency(word),
-  })).sort((a, b) => b.urgency - a.urgency);
+  })).sort((a, b) => a.urgency - b.urgency);
 
   return wordUrgency.at(0)!.word;
 }
 
 export function getWordUrgency(word: Word): number {
-  const lastEntry = word.history?.at(-1);
+  const lastEntry = word.history.at(-1);
+
+  const relevantHistory = word.history.reverse().slice(0, 5);
+
+  // console.log(word.original);
+
+  const averageCertainty = getWeightedAverageCertainty(relevantHistory);
+
+  // console.log("averageCertainty", averageCertainty);
 
   // falls back to createdAt if no history is available
   const secondsSinceLastQuiz = Math.floor(
     (Date.now() - (lastEntry?.date ?? word.createdAt)) / (1000),
   );
 
-  return Math.floor(secondsSinceLastQuiz / Math.pow((lastEntry?.certainty ?? 1), 2));
+  const urgency = Math.floor(
+    secondsSinceLastQuiz / Math.pow(averageCertainty, 2),
+  );
+
+  // die Zeit zum letzten Quiz ist viel zu "wichtig" in der Formel. Sollte nur halb so stark gewichtet sein oder so.
+  // console.log("urgency", urgency);
+
+  return urgency;
+}
+
+function getWeightedAverageCertainty(history: QuizHistoryEntry[]): number {
+  const numEntries = history.length;
+  if (numEntries === 0) {
+    return 0;
+  }
+  let sumCertainty = 0;
+  let sumWeight = 0;
+  for (let i = 0; i < numEntries; i++) {
+    const weight = i === numEntries - 1 ? 2 : 1;
+    sumCertainty += history[i].certainty * weight;
+    sumWeight += weight;
+    if (i === 2) {
+      break;
+    }
+  }
+  return sumCertainty / sumWeight;
 }
