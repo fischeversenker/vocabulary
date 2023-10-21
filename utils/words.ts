@@ -133,8 +133,8 @@ export async function getMostUrgentWord(): Promise<WordWithUrgency> {
 
   const wordUrgency = wordList.map((word) => ({
     word,
-    urgency: getWordUrgency(word),
-  })).sort((a, b) => a.urgency - b.urgency);
+    urgency: word.urgency,
+  })).sort((a, b) => b.urgency - a.urgency);
 
   return wordUrgency.at(0)!.word;
 }
@@ -159,9 +159,9 @@ export function getWordUrgency(word: Word): number {
     secondsSinceLastQuiz / Math.pow(averageCertainty, 2),
   );
 
-  // die Zeit zum letzten Quiz ist viel zu "wichtig" in der Formel. Sollte nur halb so stark gewichtet sein oder so.
   // console.log("urgency", urgency);
 
+  // die Zeit zum letzten Quiz ist viel zu "wichtig" in der Formel. Sollte nur halb so stark gewichtet sein oder so.
   return urgency;
 }
 
