@@ -144,10 +144,9 @@ export function getWordUrgency(word: Word): number {
 
   const relevantHistory = word.history.reverse().slice(0, 5);
 
+  const averageCertainty = getWeightedCertainty(relevantHistory) ?? 0.8;
+
   // console.log(word.original);
-
-  const averageCertainty = getWeightedAverageCertainty(relevantHistory);
-
   // console.log("averageCertainty", averageCertainty);
 
   // falls back to createdAt if no history is available
@@ -155,35 +154,48 @@ export function getWordUrgency(word: Word): number {
     (Date.now() - (lastEntry?.date ?? word.createdAt)) / (1000),
   );
 
-  // the urgency formula was:
-  // z = x / y^2
-  // Math.floor(
-  //   secondsSinceLastQuiz / (Math.pow(averageCertainty, 4)),
-  // );
+  const urgency = Math.floor(
+    secondsSinceLastQuiz / (Math.pow(averageCertainty, 4)),
+  );
 
-  const urgency = 100 - (Math.pow(averageCertainty, 4) /
-    (1 + Math.pow(secondsSinceLastQuiz / 1000, 1)));
+  // const urgency = 1 - Math.pow(averageCertainty, 4) /
+  //     (Math.pow(secondsSinceLastQuiz / 1000000, -1));
 
   // console.log("urgency", urgency);
+  // console.log(relevantHistory);
 
-  // die Zeit zum letzten Quiz ist viel zu "wichtig" in der Formel. Sollte nur halb so stark gewichtet sein oder so.
   return urgency;
 }
 
-function getWeightedAverageCertainty(history: QuizHistoryEntry[]): number {
-  const numEntries = history.length;
-  if (numEntries === 0) {
-    return 0;
+// calculate the weighted average certainty for a given history
+// the weight of the certainty should depend on how long ago the entry was
+// the more recent the entry, the more weight it should have
+// only first three entries should be considered
+// this given parameter history has three entries, the first one being the newest
+function getWeightedCertainty(
+  history: QuizHistoryEntry[],
+): number | null {
+  if (history.length === 0) {
+    return null;
   }
-  let sumCertainty = 0;
-  let sumWeight = 0;
-  for (let i = 0; i < numEntries; i++) {
-    const weight = i === numEntries - 1 ? 2 : 1;
-    sumCertainty += history[i].certainty * weight;
-    sumWeight += weight;
-    if (i === 2) {
-      break;
-    }
+
+  const now = Date.now();
+
+  function getWeightFor(entry: QuizHistoryEntry) {
+    const timeSinceEntry = now - entry.date;
+    const weight = 1 / (Math.pow(timeSinceEntry, 1));
+    const result = weight * 1000 * 1000;
+    return result;
   }
-  return sumCertainty / sumWeight;
+
+  const certaintySum = history.reduce((sum, entry) => {
+    const weight = getWeightFor(entry);
+    return sum + entry.certainty * weight;
+  }, 0);
+
+  const weightSum = history.reduce((sum, entry) => {
+    return sum + getWeightFor(entry);
+  }, 0);
+
+  return certaintySum / weightSum;
 }
