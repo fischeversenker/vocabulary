@@ -26,6 +26,28 @@ export function QuizWord({ word, showOriginal }: NewWordProps) {
     window.location.href = "/quiz";
   }
 
+  globalThis.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      isRevealed.value = true;
+    }
+    // if a pressed answer 3
+    // if s pressed answer 2
+    // if d pressed answer 1
+    // if f pressed reveal
+    if (event.key === "a") {
+      answer(3);
+    }
+    if (event.key === "s") {
+      answer(2);
+    }
+    if (event.key === "d") {
+      answer(1);
+    }
+    if (event.key === "f") {
+      isRevealed.value = true;
+    }
+  });
+
   return (
     <>
       <div class="is-flex is-flex-direction-column has-text-centered py-6">
@@ -47,18 +69,25 @@ export function QuizWord({ word, showOriginal }: NewWordProps) {
               onClick={(event) => onRevealClicked(event)}
               class="button"
             >
-              Reveal
+              Reveal<span class="is-hidden-mobile">
+                &nbsp;(<code>f</code>)
+              </span>
             </button>
           </p>
         )}
         {isRevealed.value && (
-          <div class="field has-addons">
+          <div
+            class="field has-addons flex is-flex-direction-column is-align-items-center"
+            style="gap: 16px;"
+          >
             <p class="control">
               <button
-                class="button is-danger is-light"
-                onClick={() => answer(1)}
+                class="button is-success is-light"
+                onClick={() => answer(3)}
               >
-                What?!
+                Yes!<span class="is-hidden-mobile">
+                  &nbsp;(<code>a</code>)
+                </span>
               </button>
             </p>
             <p class="control">
@@ -66,15 +95,19 @@ export function QuizWord({ word, showOriginal }: NewWordProps) {
                 class="button is-warning is-light"
                 onClick={() => answer(2)}
               >
-                Yeah, right.
+                Yeah, right.<span class="is-hidden-mobile">
+                  &nbsp;(<code>s</code>)
+                </span>
               </button>
             </p>
             <p class="control">
               <button
-                class="button is-success is-light"
-                onClick={() => answer(3)}
+                class="button is-danger is-light"
+                onClick={() => answer(1)}
               >
-                Yes!
+                What?!<span class="is-hidden-mobile">
+                  &nbsp;(<code>d</code>)
+                </span>
               </button>
             </p>
           </div>
