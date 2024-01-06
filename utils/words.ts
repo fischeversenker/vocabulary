@@ -27,12 +27,13 @@ interface QuizHistoryEntry {
   certainty: Certainty;
 }
 
+const kv = await Deno.openKv();
+
 export async function getWordList(): Promise<WordWithUrgency[]> {
   if (IS_BROWSER) {
     throw new Error("getWordList() should not be called in the browser");
   }
 
-  const kv = await Deno.openKv();
   const words = kv.list<Word>({ prefix: [...WORD_DATA_KV_PATH] });
 
   const wordValues: WordWithUrgency[] = [];
@@ -60,7 +61,6 @@ export async function getWord(wordId: string): Promise<Word> {
     throw new Error("getWord() should not be called in the browser");
   }
 
-  const kv = await Deno.openKv();
   const word = await kv.get<Word>([...WORD_DATA_KV_PATH, wordId]);
   if (!word.value) {
     throw new Error("Word not found");
@@ -68,15 +68,14 @@ export async function getWord(wordId: string): Promise<Word> {
   return word.value;
 }
 
-export async function createWord(rawWord: Word): Promise<Word> {
+export function createWord(rawWord: Word): Word {
   if (IS_BROWSER) {
     throw new Error("createWord() should not be called in the browser");
   }
 
-  const kv = await Deno.openKv();
   const word: Word = {
-    original: rawWord.original,
-    translation: rawWord.translation,
+    original: rawWord.original.trim(),
+    translation: rawWord.translation.trim(),
     createdAt: rawWord.createdAt ?? Date.now(),
     history: [],
   };
@@ -85,12 +84,11 @@ export async function createWord(rawWord: Word): Promise<Word> {
   return word;
 }
 
-export async function deleteWord(wordId: string): Promise<boolean> {
+export function deleteWord(wordId: string): boolean {
   if (IS_BROWSER) {
     throw new Error("deleteWord() should not be called in the browser");
   }
 
-  const kv = await Deno.openKv();
   const wordPath = [...WORD_DATA_KV_PATH, wordId];
 
   kv.atomic().delete(wordPath).commit();
@@ -102,7 +100,6 @@ export async function addQuizEntry(wordId: string, certainty: Certainty) {
     throw new Error("addQuizEntry() should not be called in the browser");
   }
 
-  const kv = await Deno.openKv();
   const wordPath = [...WORD_DATA_KV_PATH, wordId];
 
   const word = await kv.get<Word>(wordPath);

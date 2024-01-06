@@ -13,8 +13,8 @@ export const handler = {
     const newWord = createWord(await req.json());
     return new Response(JSON.stringify(newWord));
   },
-  async DELETE(_req: Request, ctx: HandlerContext) {
-    await deleteWord(ctx.params.wordId);
+  DELETE(_req: Request, ctx: HandlerContext) {
+    deleteWord(ctx.params.wordId);
     return new Response(null, { status: 204 });
   },
 };
