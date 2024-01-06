@@ -1,3 +1,5 @@
+import { Login } from "../islands/Login.tsx";
+
 interface HeaderProps {
   activeRoute: string;
 }
@@ -32,6 +34,9 @@ export function Header({ activeRoute }: HeaderProps) {
         >
           {"Original Quiz"}
         </a>
+        <div class="navbar-item" style="margin-left: auto;">
+          <Login />
+        </div>
       </div>
     </nav>
   );

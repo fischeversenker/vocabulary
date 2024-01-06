@@ -7,12 +7,14 @@ import * as $1 from "./routes/_app.tsx";
 import * as $2 from "./routes/api/quiz/[wordId].ts";
 import * as $3 from "./routes/api/words.ts";
 import * as $4 from "./routes/api/words/[wordId].ts";
-import * as $5 from "./routes/index.tsx";
-import * as $6 from "./routes/quiz.tsx";
-import * as $7 from "./routes/words/[word].tsx";
-import * as $$0 from "./islands/NewWord.tsx";
-import * as $$1 from "./islands/QuizWord.tsx";
-import * as $$2 from "./islands/WordDetail.tsx";
+import * as $5 from "./routes/api/words/rename.ts";
+import * as $6 from "./routes/index.tsx";
+import * as $7 from "./routes/quiz.tsx";
+import * as $8 from "./routes/words/[word].tsx";
+import * as $$0 from "./islands/Login.tsx";
+import * as $$1 from "./islands/NewWord.tsx";
+import * as $$2 from "./islands/QuizWord.tsx";
+import * as $$3 from "./islands/WordDetail.tsx";
 
 const manifest = {
   routes: {
@@ -21,14 +23,16 @@ const manifest = {
     "./routes/api/quiz/[wordId].ts": $2,
     "./routes/api/words.ts": $3,
     "./routes/api/words/[wordId].ts": $4,
-    "./routes/index.tsx": $5,
-    "./routes/quiz.tsx": $6,
-    "./routes/words/[word].tsx": $7,
+    "./routes/api/words/rename.ts": $5,
+    "./routes/index.tsx": $6,
+    "./routes/quiz.tsx": $7,
+    "./routes/words/[word].tsx": $8,
   },
   islands: {
-    "./islands/NewWord.tsx": $$0,
-    "./islands/QuizWord.tsx": $$1,
-    "./islands/WordDetail.tsx": $$2,
+    "./islands/Login.tsx": $$0,
+    "./islands/NewWord.tsx": $$1,
+    "./islands/QuizWord.tsx": $$2,
+    "./islands/WordDetail.tsx": $$3,
   },
   baseUrl: import.meta.url,
 };
