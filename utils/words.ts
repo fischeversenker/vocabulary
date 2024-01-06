@@ -144,7 +144,7 @@ export function getWordUrgency(word: Word): number {
 
   const relevantHistory = word.history.reverse().slice(0, 5);
 
-  const averageCertainty = getWeightedCertainty(relevantHistory) ?? 0.8;
+  const averageCertainty = getWeightedCertainty(relevantHistory);
 
   // console.log(word.original);
   // console.log("averageCertainty", averageCertainty);
@@ -154,9 +154,7 @@ export function getWordUrgency(word: Word): number {
     (Date.now() - (lastEntry?.date ?? word.createdAt)) / (1000),
   );
 
-  const urgency = Math.floor(
-    secondsSinceLastQuiz / (Math.pow(averageCertainty, 4)),
-  );
+  const urgency = secondsSinceLastQuiz / (Math.pow(averageCertainty, 4));
 
   // const urgency = 1 - Math.pow(averageCertainty, 4) /
   //     (Math.pow(secondsSinceLastQuiz / 1000000, -1));
@@ -170,13 +168,13 @@ export function getWordUrgency(word: Word): number {
 // calculate the weighted average certainty for a given history
 // the weight of the certainty should depend on how long ago the entry was
 // the more recent the entry, the more weight it should have
-// only first three entries should be considered
-// this given parameter history has three entries, the first one being the newest
 function getWeightedCertainty(
   history: QuizHistoryEntry[],
-): number | null {
+): number {
   if (history.length === 0) {
-    return null;
+    // the default certainty for unanswered words is 0.8,
+    // which is even more urgent than the "What?!" response
+    return 0.8;
   }
 
   const now = Date.now();
