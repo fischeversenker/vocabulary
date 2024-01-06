@@ -77,7 +77,7 @@ export function createWord(rawWord: Word): Word {
     original: rawWord.original.trim(),
     translation: rawWord.translation.trim(),
     createdAt: rawWord.createdAt ?? Date.now(),
-    history: [],
+    history: rawWord.history ?? [],
   };
 
   kv.atomic().set([...WORD_DATA_KV_PATH, rawWord.original], word).commit();
