@@ -80,7 +80,8 @@ export function createWord(rawWord: Word): Word {
     history: rawWord.history ?? [],
   };
 
-  kv.atomic().set([...WORD_DATA_KV_PATH, rawWord.original], word).commit();
+  kv.atomic().set([...WORD_DATA_KV_PATH, rawWord.original.trim()], word)
+    .commit();
   return word;
 }
 
