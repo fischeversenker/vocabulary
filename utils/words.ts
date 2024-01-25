@@ -1,7 +1,7 @@
 import { IS_BROWSER } from "$fresh/runtime.ts";
 import { signal } from "@preact/signals";
 
-export const wordList = signal<Word[]>([]);
+export const wordList = signal<WordWithNormalizedUrgency[]>([]);
 
 export const WORD_DATA_KV_PATH = [
   "fischeversenker",
@@ -22,6 +22,10 @@ export interface WordWithUrgency extends Word {
   urgency: number;
 }
 
+export interface WordWithNormalizedUrgency extends WordWithUrgency {
+  normalizedUrgency: number;
+}
+
 interface QuizHistoryEntry {
   date: number;
   certainty: Certainty;
@@ -29,7 +33,7 @@ interface QuizHistoryEntry {
 
 const kv = await Deno.openKv();
 
-export async function getWordList(): Promise<WordWithUrgency[]> {
+export async function getWordList(): Promise<WordWithNormalizedUrgency[]> {
   if (IS_BROWSER) {
     throw new Error("getWordList() should not be called in the browser");
   }
@@ -50,7 +54,7 @@ export async function getWordList(): Promise<WordWithUrgency[]> {
 
   const wordValuesWithUrgency = wordValues.map((word) => ({
     ...word,
-    urgency: word.urgency / maxUrgency,
+    normalizedUrgency: word.urgency / maxUrgency,
   }));
 
   return wordValuesWithUrgency;
@@ -129,12 +133,9 @@ export async function getMostUrgentWord(): Promise<WordWithUrgency> {
 
   const wordList = await getWordList();
 
-  const wordUrgency = wordList.map((word) => ({
-    word,
-    urgency: word.urgency,
-  })).sort((a, b) => b.urgency - a.urgency);
+  const wordsSortedByUrgency = wordList.sort((a, b) => b.urgency - a.urgency);
 
-  return wordUrgency.at(0)!.word;
+  return wordsSortedByUrgency.at(0)!;
 }
 
 export function getWordUrgency(word: Word): number {
@@ -163,9 +164,9 @@ export function getWordUrgency(word: Word): number {
   return urgency;
 }
 
-// calculate the weighted average certainty for a given history
-// the weight of the certainty should depend on how long ago the entry was
-// the more recent the entry, the more weight it should have
+// calculate the weighted average certainty for a given history.
+// the weight of the certainty should depend on how long ago the entry was.
+// the more recent the entry, the more weight it should have.
 function getWeightedCertainty(
   history: QuizHistoryEntry[],
 ): number {

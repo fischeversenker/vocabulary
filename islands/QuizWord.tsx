@@ -4,9 +4,10 @@ import { Certainty, WordWithUrgency } from "../utils/words.ts";
 interface NewWordProps {
   word: WordWithUrgency;
   showOriginal: boolean;
+  continueAnyway: boolean;
 }
 
-export function QuizWord({ word, showOriginal }: NewWordProps) {
+export function QuizWord({ word, showOriginal, continueAnyway }: NewWordProps) {
   const showTranslation = !showOriginal;
 
   const isRevealed = useSignal(false);
@@ -16,6 +17,21 @@ export function QuizWord({ word, showOriginal }: NewWordProps) {
     isRevealed.value = true;
   }
 
+  function onContinueAnywayClicked(event: Event) {
+    event.preventDefault();
+    const now = new Date();
+    const nextDay = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      now.getUTCHours() + 2,
+      now.getUTCMinutes(),
+    );
+    document.cookie =
+      `continueAnyway=true; expires=${nextDay.toUTCString()}; path=/quiz;`;
+    window.location.reload();
+  }
+
   async function answer(certainty: Certainty) {
     await fetch(`/api/quiz/${word.original}`, {
       method: "PATCH",
@@ -23,16 +39,16 @@ export function QuizWord({ word, showOriginal }: NewWordProps) {
         certainty,
       }),
     });
-    window.location.href = "/quiz";
+    window.location.reload();
   }
 
   globalThis.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
       isRevealed.value = true;
     }
-    // if a pressed answer 3
-    // if s pressed answer 2
-    // if d pressed answer 1
+    // if a pressed answer 3 (Yes!)
+    // if s pressed answer 2 (Yeah, right.)
+    // if d pressed answer 1 (What?!)
     // if f pressed reveal
     if (event.key === "a") {
       answer(3);
@@ -47,6 +63,32 @@ export function QuizWord({ word, showOriginal }: NewWordProps) {
       isRevealed.value = true;
     }
   });
+
+  // TODO: refine the 30000 threshold
+  if (word.urgency < 30000 && !continueAnyway) {
+    return (
+      <>
+        <div class="is-flex is-flex-direction-column has-text-centered py-6">
+          <div class="is-size-4 has-text-weight-bold">
+            That's all for today 🎉
+          </div>
+          <div class="is-size-5 pt-1">
+            The next word would have been{" "}
+            "{showOriginal ? word.original : word.translation}"
+          </div>
+        </div>
+
+        <div class="field block is-grouped is-justify-content-center">
+          <button
+            onClick={(event) => onContinueAnywayClicked(event)}
+            class="button is-info is-light"
+          >
+            Continue anyways
+          </button>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>

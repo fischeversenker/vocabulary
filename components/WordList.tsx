@@ -1,8 +1,8 @@
 import { Signal } from "@preact/signals";
-import { WordWithUrgency } from "../utils/words.ts";
+import { WordWithNormalizedUrgency } from "../utils/words.ts";
 
 interface WordListProps {
-  knownWords: Signal<WordWithUrgency[]>;
+  knownWords: Signal<WordWithNormalizedUrgency[]>;
 }
 
 export function WordList({ knownWords }: WordListProps) {
@@ -34,7 +34,7 @@ export function WordList({ knownWords }: WordListProps) {
               <div class="has-text-grey-light">
                 <progress
                   class="progress is-small"
-                  value={word.urgency}
+                  value={word.normalizedUrgency}
                   max="1"
                 />
               </div>
