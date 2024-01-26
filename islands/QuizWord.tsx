@@ -65,7 +65,7 @@ export function QuizWord({ word, showOriginal, continueAnyway }: NewWordProps) {
   });
 
   // TODO: refine the threshold
-  if (word.urgency < 20000 && !continueAnyway) {
+  if (word.urgency < 18000 && !continueAnyway) {
     return (
       <>
         <div class="is-flex is-flex-direction-column has-text-centered py-6">
