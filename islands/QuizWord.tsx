@@ -70,7 +70,7 @@ export function QuizWord({ word, showOriginal, continueAnyway }: NewWordProps) {
       <>
         <div class="is-flex is-flex-direction-column has-text-centered py-6">
           <div class="is-size-4 has-text-weight-bold">
-            That's all for today 🎉
+            That's all for now 🎉
           </div>
           <div class="is-size-5 pt-1">
             The next word would have been{" "}
