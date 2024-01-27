@@ -36,7 +36,7 @@ export default async function App(
           style="height: calc(100% - 52px) /* minus the header height */;"
         >
           <div
-            class="container is-max-desktop is-flex is-flex-direction-column is-justify-content-space-between"
+            class="container is-max-desktop"
             style="height: 100%;"
           >
             <Component />

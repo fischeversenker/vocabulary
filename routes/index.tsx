@@ -18,28 +18,33 @@ export default async function Quiz(req: Request) {
 
   return (
     <>
-      <div class="block">
-        <div class="buttons has-addons is-centered">
-          <a
-            href="/?original=true"
-            class={`button is-flex-grow-1 ${showOriginal ? "is-info" : ""}`}
-          >
-            <span>BG</span>
-          </a>
-          <a
-            href="/?original=false"
-            class={`button is-flex-grow-1 ${showOriginal ? "" : "is-info"}`}
-          >
-            <span>DE</span>
-          </a>
+      <div
+        class="is-flex is-flex-direction-column is-justify-content-space-between"
+        style="height: 100%;"
+      >
+        <div class="block">
+          <div class="buttons has-addons is-centered">
+            <a
+              href="/?original=true"
+              class={`button is-flex-grow-1 ${showOriginal ? "is-info" : ""}`}
+            >
+              <span>BG</span>
+            </a>
+            <a
+              href="/?original=false"
+              class={`button is-flex-grow-1 ${showOriginal ? "" : "is-info"}`}
+            >
+              <span>DE</span>
+            </a>
+          </div>
         </div>
-      </div>
 
-      <QuizWord
-        word={await getMostUrgentWord()}
-        showOriginal={showOriginal}
-        continueAnyway={continueAnyway}
-      />
+        <QuizWord
+          word={await getMostUrgentWord()}
+          showOriginal={showOriginal}
+          continueAnyway={continueAnyway}
+        />
+      </div>
     </>
   );
 }

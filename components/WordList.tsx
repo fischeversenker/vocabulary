@@ -7,10 +7,7 @@ interface WordListProps {
 
 export function WordList({ knownWords }: WordListProps) {
   return (
-    <table
-      class="table is-striped is-fullwidth is-narrow block"
-      style="margin-bottom: auto"
-    >
+    <table class="table is-striped is-fullwidth is-narrow block">
       <thead>
         <tr>
           <th>
