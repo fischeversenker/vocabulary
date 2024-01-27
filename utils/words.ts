@@ -1,7 +1,8 @@
 import { IS_BROWSER } from "$fresh/runtime.ts";
 import { signal } from "@preact/signals";
 
-export const wordList = signal<WordWithNormalizedUrgency[]>([]);
+export const filteredWordList = signal<WordWithNormalizedUrgency[]>([]);
+export const searchString = signal<string>("");
 
 export const WORD_DATA_KV_PATH = [
   "fischeversenker",

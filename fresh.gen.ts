@@ -14,7 +14,9 @@ import * as $8 from "./routes/words/[word].tsx";
 import * as $$0 from "./islands/Login.tsx";
 import * as $$1 from "./islands/NewWord.tsx";
 import * as $$2 from "./islands/QuizWord.tsx";
-import * as $$3 from "./islands/WordDetail.tsx";
+import * as $$3 from "./islands/Search.tsx";
+import * as $$4 from "./islands/WordDetail.tsx";
+import * as $$5 from "./islands/WordList.tsx";
 
 const manifest = {
   routes: {
@@ -32,7 +34,9 @@ const manifest = {
     "./islands/Login.tsx": $$0,
     "./islands/NewWord.tsx": $$1,
     "./islands/QuizWord.tsx": $$2,
-    "./islands/WordDetail.tsx": $$3,
+    "./islands/Search.tsx": $$3,
+    "./islands/WordDetail.tsx": $$4,
+    "./islands/WordList.tsx": $$5,
   },
   baseUrl: import.meta.url,
 };

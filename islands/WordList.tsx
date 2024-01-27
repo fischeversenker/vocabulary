@@ -2,10 +2,10 @@ import { Signal } from "@preact/signals";
 import { WordWithNormalizedUrgency } from "../utils/words.ts";
 
 interface WordListProps {
-  knownWords: Signal<WordWithNormalizedUrgency[]>;
+  words: Signal<WordWithNormalizedUrgency[]>;
 }
 
-export function WordList({ knownWords }: WordListProps) {
+export function WordList({ words }: WordListProps) {
   return (
     <table class="table is-striped is-fullwidth is-narrow block">
       <thead>
@@ -22,7 +22,7 @@ export function WordList({ knownWords }: WordListProps) {
         </tr>
       </thead>
       <tbody>
-        {knownWords.value.map((word) => (
+        {words.value.map((word) => (
           <tr>
             <th>
               <a href={`/words/${word.original}`}>{word.original}</a>

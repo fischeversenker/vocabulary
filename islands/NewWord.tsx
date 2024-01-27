@@ -1,12 +1,6 @@
-import { Signal } from "@preact/signals";
 import { createRef } from "preact";
-import { Word } from "../utils/words.ts";
 
-interface NewWordProps {
-  knownWords: Signal<Word[]>;
-}
-
-export function NewWord({ knownWords }: NewWordProps) {
+export function NewWord() {
   const originalRef = createRef();
   const translationRef = createRef();
 
@@ -27,11 +21,7 @@ export function NewWord({ knownWords }: NewWordProps) {
       },
       body: JSON.stringify(newWord),
     });
-    const words = await fetch("/api/words");
-    knownWords.value = await words.json() as Word[];
-
-    originalRef.current.value = "";
-    translationRef.current.value = "";
+    window.location.reload();
   }
 
   return (

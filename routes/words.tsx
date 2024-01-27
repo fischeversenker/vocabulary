@@ -1,14 +1,18 @@
-import { WordList } from "../components/WordList.tsx";
 import { NewWord } from "../islands/NewWord.tsx";
-import { getWordList, wordList } from "../utils/words.ts";
+import { Search } from "../islands/Search.tsx";
+import { WordList } from "../islands/WordList.tsx";
+import { filteredWordList, getWordList } from "../utils/words.ts";
 
 export default async function Home() {
-  wordList.value = await getWordList();
-
+  const knownWords = await getWordList();
   return (
     <>
-      <NewWord knownWords={wordList}></NewWord>
-      <WordList knownWords={wordList}></WordList>
+      <Search
+        knownWords={knownWords}
+        filteredWords={filteredWordList}
+      />
+      <NewWord />
+      <WordList words={filteredWordList}></WordList>
     </>
   );
 }
