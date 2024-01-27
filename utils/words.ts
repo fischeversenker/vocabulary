@@ -11,11 +11,25 @@ export const WORD_DATA_KV_PATH = [
 
 export type Certainty = 1 | 2 | 3;
 
+export type WordClassType =
+  | "unknown"
+  | "noun"
+  | "adjective"
+  | "number"
+  | "pronoun"
+  | "verb"
+  | "adverb"
+  | "preposition"
+  | "conjunction"
+  | "particle"
+  | "interjections";
+
 export interface Word {
   original: string;
   translation: string;
   createdAt: number;
   history: QuizHistoryEntry[];
+  class: WordClassType;
 }
 
 export interface WordWithUrgency extends Word {
@@ -82,6 +96,7 @@ export function createWord(rawWord: Word): Word {
     translation: rawWord.translation.trim(),
     createdAt: rawWord.createdAt ?? Date.now(),
     history: rawWord.history ?? [],
+    class: rawWord.class ?? "unknown",
   };
 
   kv.atomic().set([...WORD_DATA_KV_PATH, rawWord.original.trim()], word)
