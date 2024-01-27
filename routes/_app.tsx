@@ -26,15 +26,19 @@ export default async function App(
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Vocabulary</title>
+        <link rel="stylesheet" href="/styles.css" />
         <link rel="stylesheet" href="/bulma.min.css" />
       </head>
       <body>
         <Header activeRoute={activeRoute} />
         <section
-          class="section"
-          style="padding-inline: 0.7rem; padding-block-start: 1rem;"
+          class="section px-3 pt-3 pb-6"
+          style="height: calc(100% - 52px) /* minus the header height */;"
         >
-          <div class="container is-max-desktop">
+          <div
+            class="container is-max-desktop is-flex is-flex-direction-column is-justify-content-space-between"
+            style="height: 100%;"
+          >
             <Component />
           </div>
         </section>

@@ -19,16 +19,16 @@ export default async function Quiz(req: Request) {
   return (
     <>
       <div class="block">
-        <div class="buttons has-addons is-right">
+        <div class="buttons has-addons is-centered">
           <a
             href="/?original=true"
-            class={`button ${showOriginal ? "is-info" : ""}`}
+            class={`button is-flex-grow-1 ${showOriginal ? "is-info" : ""}`}
           >
             <span>BG</span>
           </a>
           <a
             href="/?original=false"
-            class={`button ${showOriginal ? "" : "is-info"}`}
+            class={`button is-flex-grow-1 ${showOriginal ? "" : "is-info"}`}
           >
             <span>DE</span>
           </a>

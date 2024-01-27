@@ -50,13 +50,13 @@ export function QuizWord({ word, showOriginal, continueAnyway }: NewWordProps) {
     // if s pressed answer 2 (Yeah, right.)
     // if d pressed answer 1 (What?!)
     // if f pressed reveal
-    if (event.key === "a") {
+    if (event.key === "d") {
       answer(3);
     }
     if (event.key === "s") {
       answer(2);
     }
-    if (event.key === "d") {
+    if (event.key === "a") {
       answer(1);
     }
     if (event.key === "f") {
@@ -118,40 +118,31 @@ export function QuizWord({ word, showOriginal, continueAnyway }: NewWordProps) {
           </p>
         )}
         {isRevealed.value && (
-          <div
-            class="field has-addons flex is-flex-direction-column is-align-items-center"
-            style="gap: 16px;"
-          >
-            <p class="control">
-              <button
-                class="button is-success is-light"
-                onClick={() => answer(3)}
-              >
-                Yes!<span class="is-hidden-mobile">
-                  &nbsp;(<code>a</code>)
-                </span>
-              </button>
-            </p>
-            <p class="control">
-              <button
-                class="button is-warning is-light"
-                onClick={() => answer(2)}
-              >
-                Yeah, right.<span class="is-hidden-mobile">
-                  &nbsp;(<code>s</code>)
-                </span>
-              </button>
-            </p>
-            <p class="control">
-              <button
-                class="button is-danger is-light"
-                onClick={() => answer(1)}
-              >
-                What?!<span class="is-hidden-mobile">
-                  &nbsp;(<code>d</code>)
-                </span>
-              </button>
-            </p>
+          <div class="buttons has-addons is-centered">
+            <button
+              class="button is-danger is-light"
+              onClick={() => answer(1)}
+            >
+              What?!<span class="is-hidden-mobile">
+                &nbsp;(<code>a</code>)
+              </span>
+            </button>
+            <button
+              class="button is-warning is-light"
+              onClick={() => answer(2)}
+            >
+              Yeah, right.<span class="is-hidden-mobile">
+                &nbsp;(<code>s</code>)
+              </span>
+            </button>
+            <button
+              class="button is-success is-light"
+              onClick={() => answer(3)}
+            >
+              Yes!<span class="is-hidden-mobile">
+                &nbsp;(<code>d</code>)
+              </span>
+            </button>
           </div>
         )}
       </div>
