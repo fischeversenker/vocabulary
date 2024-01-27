@@ -1,5 +1,3 @@
-import { Login } from "../islands/Login.tsx";
-
 interface HeaderProps {
   activeRoute: string;
 }
@@ -16,27 +14,21 @@ export function Header({ activeRoute }: HeaderProps) {
           class={`navbar-item is-tab ${activeRoute === "/" ? "is-active" : ""}`}
           href="/"
         >
-          Home
+          Quiz
         </a>
         <a
           class={`navbar-item is-tab ${
-            activeRoute === "/quiz?original=true" ? "is-active" : ""
+            activeRoute === "/words" ? "is-active" : ""
           }`}
-          href="/quiz?original=true"
+          href="/words"
         >
-          {"Translation Quiz"}
+          Words
         </a>
-        <a
-          class={`navbar-item is-tab ${
-            activeRoute === "/quiz?original=false" ? "is-active" : ""
-          }`}
-          href="/quiz?original=false"
-        >
-          {"Original Quiz"}
-        </a>
-        {/*<div class="navbar-item" style="margin-left: auto;">
+        {
+          /*<div class="navbar-item" style="margin-left: auto;">
           <Login />
-        </div>*/}
+        </div>*/
+        }
       </div>
     </nav>
   );

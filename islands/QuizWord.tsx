@@ -28,7 +28,7 @@ export function QuizWord({ word, showOriginal, continueAnyway }: NewWordProps) {
       now.getUTCMinutes(),
     );
     document.cookie =
-      `continueAnyway=true; expires=${nextDay.toUTCString()}; path=/quiz;`;
+      `continueAnyway=true; expires=${nextDay.toUTCString()}; path=/;`;
     window.location.reload();
   }
 
