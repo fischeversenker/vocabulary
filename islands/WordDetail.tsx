@@ -1,62 +1,11 @@
 import { computed, signal } from "@preact/signals";
 import { createRef } from "preact";
+import { WordClasses } from "../utils/client.ts";
 import { Word, WordClassType } from "../utils/words.ts";
 
 interface WordDetailProps {
   word: Word;
 }
-
-type WordClass = {
-  label: string;
-  value: WordClassType;
-};
-
-const WordClasses: WordClass[] = [
-  {
-    label: "None",
-    value: "unknown",
-  },
-  {
-    label: "Noun",
-    value: "noun",
-  },
-  {
-    label: "Adjective",
-    value: "adjective",
-  },
-  {
-    label: "Number",
-    value: "number",
-  },
-  {
-    label: "Pronoun",
-    value: "pronoun",
-  },
-  {
-    label: "Verb",
-    value: "verb",
-  },
-  {
-    label: "Adverb",
-    value: "adverb",
-  },
-  {
-    label: "Preposition",
-    value: "preposition",
-  },
-  {
-    label: "Conjunction",
-    value: "conjunction",
-  },
-  {
-    label: "Particle",
-    value: "particle",
-  },
-  {
-    label: "Interjections",
-    value: "interjections",
-  },
-] as const;
 
 export function WordDetail({ word }: WordDetailProps) {
   const translationRef = createRef();
