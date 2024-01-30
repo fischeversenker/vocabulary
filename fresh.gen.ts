@@ -4,39 +4,41 @@
 
 import * as $0 from "./routes/_404.tsx";
 import * as $1 from "./routes/_app.tsx";
-import * as $2 from "./routes/api/quiz/[wordId].ts";
-import * as $3 from "./routes/api/words.ts";
-import * as $4 from "./routes/api/words/[wordId].ts";
-import * as $5 from "./routes/api/words/rename.ts";
-import * as $6 from "./routes/index.tsx";
-import * as $7 from "./routes/words.tsx";
-import * as $8 from "./routes/words/[word].tsx";
-import * as $$0 from "./islands/Login.tsx";
-import * as $$1 from "./islands/NewWord.tsx";
-import * as $$2 from "./islands/QuizWord.tsx";
-import * as $$3 from "./islands/Search.tsx";
-import * as $$4 from "./islands/WordDetail.tsx";
-import * as $$5 from "./islands/WordList.tsx";
+import * as $2 from "./routes/_middleware.ts";
+import * as $3 from "./routes/api/quiz/[wordId].ts";
+import * as $4 from "./routes/api/words.ts";
+import * as $5 from "./routes/api/words/[wordId].ts";
+import * as $6 from "./routes/api/words/rename.ts";
+import * as $7 from "./routes/auth.tsx";
+import * as $8 from "./routes/index.tsx";
+import * as $9 from "./routes/words.tsx";
+import * as $10 from "./routes/words/[word].tsx";
+import * as $$0 from "./islands/NewWord.tsx";
+import * as $$1 from "./islands/QuizWord.tsx";
+import * as $$2 from "./islands/Search.tsx";
+import * as $$3 from "./islands/WordDetail.tsx";
+import * as $$4 from "./islands/WordList.tsx";
 
 const manifest = {
   routes: {
     "./routes/_404.tsx": $0,
     "./routes/_app.tsx": $1,
-    "./routes/api/quiz/[wordId].ts": $2,
-    "./routes/api/words.ts": $3,
-    "./routes/api/words/[wordId].ts": $4,
-    "./routes/api/words/rename.ts": $5,
-    "./routes/index.tsx": $6,
-    "./routes/words.tsx": $7,
-    "./routes/words/[word].tsx": $8,
+    "./routes/_middleware.ts": $2,
+    "./routes/api/quiz/[wordId].ts": $3,
+    "./routes/api/words.ts": $4,
+    "./routes/api/words/[wordId].ts": $5,
+    "./routes/api/words/rename.ts": $6,
+    "./routes/auth.tsx": $7,
+    "./routes/index.tsx": $8,
+    "./routes/words.tsx": $9,
+    "./routes/words/[word].tsx": $10,
   },
   islands: {
-    "./islands/Login.tsx": $$0,
-    "./islands/NewWord.tsx": $$1,
-    "./islands/QuizWord.tsx": $$2,
-    "./islands/Search.tsx": $$3,
-    "./islands/WordDetail.tsx": $$4,
-    "./islands/WordList.tsx": $$5,
+    "./islands/NewWord.tsx": $$0,
+    "./islands/QuizWord.tsx": $$1,
+    "./islands/Search.tsx": $$2,
+    "./islands/WordDetail.tsx": $$3,
+    "./islands/WordList.tsx": $$4,
   },
   baseUrl: import.meta.url,
 };

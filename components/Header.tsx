@@ -1,8 +1,9 @@
 interface HeaderProps {
   activeRoute: string;
+  user: string;
 }
 
-export function Header({ activeRoute }: HeaderProps) {
+export function Header({ activeRoute, user }: HeaderProps) {
   return (
     <nav
       class="navbar is-info has-shadow"
@@ -24,11 +25,9 @@ export function Header({ activeRoute }: HeaderProps) {
         >
           Words
         </a>
-        {
-          /*<div class="navbar-item" style="margin-left: auto;">
-          <Login />
-        </div>*/
-        }
+        <div class="navbar-item" style="margin-left: auto;">
+          <span>{user}</span>
+        </div>
       </div>
     </nav>
   );

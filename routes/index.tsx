@@ -1,6 +1,6 @@
 import { getCookies } from "$std/http/cookie.ts";
 import { QuizWord } from "../islands/QuizWord.tsx";
-import { getSettings, saveSettings } from "../utils/server/settings.ts";
+import { getSettings, saveSettings } from "../utils/server/user.ts";
 import { getMostUrgentWord } from "../utils/server/words.ts";
 
 export default async function Quiz(req: Request) {

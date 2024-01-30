@@ -1,4 +1,4 @@
-export const USER_SETTINGS_KV_PATH = ["fischeversenker", "settings"];
+export const USER_SETTINGS_KV_PATH = ["users", "fischeversenker", "settings"];
 
 export async function getSettings(): Promise<{ showOriginal: boolean }> {
   const kv = await Deno.openKv();

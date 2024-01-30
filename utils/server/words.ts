@@ -48,11 +48,11 @@ interface QuizHistoryEntry {
 
 const kv = await Deno.openKv();
 
-export async function getWordList(): Promise<WordWithNormalizedUrgency[]> {
-  if (IS_BROWSER) {
-    throw new Error("getWordList() should not be called in the browser");
-  }
+if (IS_BROWSER) {
+  throw new Error("this file must not be imported in the browser");
+}
 
+export async function getWordList(): Promise<WordWithNormalizedUrgency[]> {
   const words = kv.list<Word>({ prefix: [...WORD_DATA_KV_PATH] });
 
   const wordValues: WordWithUrgency[] = [];
@@ -76,10 +76,6 @@ export async function getWordList(): Promise<WordWithNormalizedUrgency[]> {
 }
 
 export async function getWord(wordId: string): Promise<Word> {
-  if (IS_BROWSER) {
-    throw new Error("getWord() should not be called in the browser");
-  }
-
   const word = await kv.get<Word>([...WORD_DATA_KV_PATH, wordId]);
   if (!word.value) {
     throw new Error("Word not found");
@@ -88,10 +84,6 @@ export async function getWord(wordId: string): Promise<Word> {
 }
 
 export function createWord(rawWord: Word): Word {
-  if (IS_BROWSER) {
-    throw new Error("createWord() should not be called in the browser");
-  }
-
   const word: Word = {
     original: rawWord.original.trim(),
     translation: rawWord.translation.trim(),
@@ -106,10 +98,6 @@ export function createWord(rawWord: Word): Word {
 }
 
 export function deleteWord(wordId: string): boolean {
-  if (IS_BROWSER) {
-    throw new Error("deleteWord() should not be called in the browser");
-  }
-
   const wordPath = [...WORD_DATA_KV_PATH, wordId];
 
   kv.atomic().delete(wordPath).commit();
@@ -117,10 +105,6 @@ export function deleteWord(wordId: string): boolean {
 }
 
 export async function addQuizEntry(wordId: string, certainty: Certainty) {
-  if (IS_BROWSER) {
-    throw new Error("addQuizEntry() should not be called in the browser");
-  }
-
   const wordPath = [...WORD_DATA_KV_PATH, wordId];
 
   const word = await kv.get<Word>(wordPath);
@@ -143,10 +127,6 @@ export async function addQuizEntry(wordId: string, certainty: Certainty) {
 }
 
 export async function getMostUrgentWord(): Promise<WordWithUrgency> {
-  if (IS_BROWSER) {
-    throw new Error("getMostUrgentWord() should not be called in the browser");
-  }
-
   const wordList = await getWordList();
 
   const wordsSortedByUrgency = wordList.sort((a, b) => b.urgency - a.urgency);
