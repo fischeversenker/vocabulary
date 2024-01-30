@@ -1,5 +1,5 @@
 import { useSignal } from "@preact/signals";
-import { Certainty, WordWithUrgency } from "../utils/words.ts";
+import { Certainty, WordWithUrgency } from "../utils/server/words.ts";
 
 interface NewWordProps {
   word: WordWithUrgency;

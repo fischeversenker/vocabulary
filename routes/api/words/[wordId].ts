@@ -1,5 +1,9 @@
 import { HandlerContext } from "$fresh/server.ts";
-import { createWord, deleteWord, getWord } from "../../../utils/words.ts";
+import {
+  createWord,
+  deleteWord,
+  getWord,
+} from "../../../utils/server/words.ts";
 
 export const handler = {
   async GET(_req: Request, ctx: HandlerContext) {

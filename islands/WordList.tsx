@@ -1,5 +1,5 @@
 import { Signal } from "@preact/signals";
-import { WordWithNormalizedUrgency } from "../utils/words.ts";
+import { WordWithNormalizedUrgency } from "../utils/server/words.ts";
 
 interface WordListProps {
   words: Signal<WordWithNormalizedUrgency[]>;

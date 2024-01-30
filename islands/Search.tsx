@@ -1,7 +1,7 @@
 import { Signal } from "@preact/signals";
 import { createRef } from "preact";
-import { WordClasses } from "../utils/client.ts";
-import { WordWithNormalizedUrgency } from "../utils/words.ts";
+import { WordClasses } from "../utils/client/word-classes.ts";
+import { WordWithNormalizedUrgency } from "../utils/server/words.ts";
 
 type Props = {
   knownWords: WordWithNormalizedUrgency[];

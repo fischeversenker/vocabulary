@@ -1,7 +1,7 @@
 import { computed, signal } from "@preact/signals";
 import { createRef } from "preact";
-import { WordClasses } from "../utils/client.ts";
-import { Word, WordClassType } from "../utils/words.ts";
+import { WordClasses } from "../utils/client/word-classes.ts";
+import { Word, WordClassType } from "../utils/server/words.ts";
 
 interface WordDetailProps {
   word: Word;

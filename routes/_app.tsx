@@ -1,6 +1,6 @@
 import { AppProps } from "$fresh/server.ts";
 import { Header } from "../components/Header.tsx";
-import { getSettings, saveSettings } from "../utils/settings.ts";
+import { getSettings, saveSettings } from "../utils/server/settings.ts";
 
 export default async function App(
   req: Request,

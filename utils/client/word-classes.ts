@@ -1,4 +1,4 @@
-import { WordClassType } from "./words.ts";
+import { WordClassType } from "../server/words.ts";
 
 export type WordClass = {
   label: string;

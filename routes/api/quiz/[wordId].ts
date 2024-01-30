@@ -1,5 +1,5 @@
 import { HandlerContext } from "$fresh/server.ts";
-import { addQuizEntry, Certainty } from "../../../utils/words.ts";
+import { addQuizEntry, Certainty } from "../../../utils/server/words.ts";
 
 export const handler = {
   async PATCH(req: Request, ctx: HandlerContext) {
