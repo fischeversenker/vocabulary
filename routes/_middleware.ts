@@ -7,7 +7,7 @@ import {
 } from "../utils/server/auth.ts";
 
 export interface AppState {
-  session: UserSession;
+  session?: UserSession;
 }
 
 export async function handler(

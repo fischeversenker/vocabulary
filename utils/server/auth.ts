@@ -15,8 +15,12 @@ export type UserSession = {
 const kv = await Deno.openKv();
 
 export async function getSession(
-  sessionId: string,
+  sessionId: string | undefined,
 ): Promise<UserSession | null> {
+  if (sessionId === undefined) {
+    return null;
+  }
+
   const session = await kv.get<UserSession>(["sessions", sessionId]);
   if (session.value === null) {
     return null;

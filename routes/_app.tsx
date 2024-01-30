@@ -33,7 +33,7 @@ export default async function App(
       <body>
         <Header
           activeRoute={activeRoute}
-          user={state.session.userData.given_name}
+          user={state.session?.userData.given_name ?? "Anonymous"}
         />
         <section
           class="section px-3 pt-3 pb-6"

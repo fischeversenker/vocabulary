@@ -1,6 +1,6 @@
 import { retrieveToken } from "../utils/server/auth.ts";
 
-export default function handler(req: Request) {
+export default async function handler(req: Request) {
   const reqUrl = new URL(req.url);
   const code = reqUrl.searchParams.get("code");
 
