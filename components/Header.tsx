@@ -25,9 +25,13 @@ export function Header({ activeRoute, user }: HeaderProps) {
         >
           Words
         </a>
-        <div class="navbar-item" style="margin-left: auto;">
-          <span>{user}</span>
-        </div>
+        <a
+          href="/auth/logout"
+          class="navbar-item is-tab"
+          style="margin-left: auto;"
+        >
+          <span>Logout {user}</span>
+        </a>
       </div>
     </nav>
   );

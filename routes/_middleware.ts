@@ -1,13 +1,14 @@
 import { FreshContext } from "$fresh/server.ts";
 import { getCookies } from "$std/http/cookie.ts";
 import {
+  deleteSession,
   getSession,
   redirectToLogin,
-  type UserSession,
 } from "../utils/server/auth.ts";
+import { getUser, User } from "../utils/server/user.ts";
 
 export interface AppState {
-  session?: UserSession;
+  user?: User;
 }
 
 export async function handler(
@@ -28,11 +29,17 @@ export async function handler(
 
   const session = await getSession(sessionId);
 
+  const authRedirectUrl = new URL("/auth", req.url);
   if (session === null) {
-    const redirectUrl = new URL("/auth", req.url);
-    return redirectToLogin(redirectUrl.href);
+    return redirectToLogin(authRedirectUrl.href);
   }
 
-  ctx.state.session = session;
+  const user = await getUser(session.userId);
+  if (!user) {
+    await deleteSession(sessionId);
+    return redirectToLogin(authRedirectUrl.href);
+  }
+
+  ctx.state.user = user;
   return ctx.next();
 }

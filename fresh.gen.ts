@@ -2,45 +2,50 @@
 // This file SHOULD be checked into source version control.
 // This file is automatically updated during development when running `dev.ts`.
 
-import * as $0 from "./routes/_404.tsx";
-import * as $1 from "./routes/_app.tsx";
-import * as $2 from "./routes/_middleware.ts";
-import * as $3 from "./routes/api/quiz/[wordId].ts";
-import * as $4 from "./routes/api/words.ts";
-import * as $5 from "./routes/api/words/[wordId].ts";
-import * as $6 from "./routes/api/words/rename.ts";
-import * as $7 from "./routes/auth.tsx";
-import * as $8 from "./routes/index.tsx";
-import * as $9 from "./routes/words.tsx";
-import * as $10 from "./routes/words/[word].tsx";
-import * as $$0 from "./islands/NewWord.tsx";
-import * as $$1 from "./islands/QuizWord.tsx";
-import * as $$2 from "./islands/Search.tsx";
-import * as $$3 from "./islands/WordDetail.tsx";
-import * as $$4 from "./islands/WordList.tsx";
+import * as $_404 from "./routes/_404.tsx";
+import * as $_500 from "./routes/_500.tsx";
+import * as $_app from "./routes/_app.tsx";
+import * as $_middleware from "./routes/_middleware.ts";
+import * as $api_quiz_wordId_ from "./routes/api/quiz/[wordId].ts";
+import * as $api_words from "./routes/api/words.ts";
+import * as $api_words_wordId_ from "./routes/api/words/[wordId].ts";
+import * as $api_words_rename from "./routes/api/words/rename.ts";
+import * as $auth from "./routes/auth.tsx";
+import * as $auth_logout from "./routes/auth/logout.ts";
+import * as $index from "./routes/index.tsx";
+import * as $words from "./routes/words.tsx";
+import * as $words_word_ from "./routes/words/[word].tsx";
+import * as $NewWord from "./islands/NewWord.tsx";
+import * as $QuizWord from "./islands/QuizWord.tsx";
+import * as $Search from "./islands/Search.tsx";
+import * as $WordDetail from "./islands/WordDetail.tsx";
+import * as $WordList from "./islands/WordList.tsx";
+import { type Manifest } from "$fresh/server.ts";
 
 const manifest = {
   routes: {
-    "./routes/_404.tsx": $0,
-    "./routes/_app.tsx": $1,
-    "./routes/_middleware.ts": $2,
-    "./routes/api/quiz/[wordId].ts": $3,
-    "./routes/api/words.ts": $4,
-    "./routes/api/words/[wordId].ts": $5,
-    "./routes/api/words/rename.ts": $6,
-    "./routes/auth.tsx": $7,
-    "./routes/index.tsx": $8,
-    "./routes/words.tsx": $9,
-    "./routes/words/[word].tsx": $10,
+    "./routes/_404.tsx": $_404,
+    "./routes/_500.tsx": $_500,
+    "./routes/_app.tsx": $_app,
+    "./routes/_middleware.ts": $_middleware,
+    "./routes/api/quiz/[wordId].ts": $api_quiz_wordId_,
+    "./routes/api/words.ts": $api_words,
+    "./routes/api/words/[wordId].ts": $api_words_wordId_,
+    "./routes/api/words/rename.ts": $api_words_rename,
+    "./routes/auth.tsx": $auth,
+    "./routes/auth/logout.ts": $auth_logout,
+    "./routes/index.tsx": $index,
+    "./routes/words.tsx": $words,
+    "./routes/words/[word].tsx": $words_word_,
   },
   islands: {
-    "./islands/NewWord.tsx": $$0,
-    "./islands/QuizWord.tsx": $$1,
-    "./islands/Search.tsx": $$2,
-    "./islands/WordDetail.tsx": $$3,
-    "./islands/WordList.tsx": $$4,
+    "./islands/NewWord.tsx": $NewWord,
+    "./islands/QuizWord.tsx": $QuizWord,
+    "./islands/Search.tsx": $Search,
+    "./islands/WordDetail.tsx": $WordDetail,
+    "./islands/WordList.tsx": $WordList,
   },
   baseUrl: import.meta.url,
-};
+} satisfies Manifest;
 
 export default manifest;

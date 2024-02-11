@@ -1,15 +1,23 @@
 import { encodeHex } from "https://deno.land/std@0.213.0/encoding/hex.ts";
+import { createUser, getUserByAuth0Id } from "./user.ts";
 
 export type UserSession = {
   sessionId: string;
   userId: string;
   expiresAt: number;
-  userData: {
-    given_name: string;
-    family_name: string;
-    name: string;
-    picture: string;
-  };
+  accessToken: string;
+  scope: string;
+};
+
+export type JwtTokenContent = {
+  sub: string;
+  name: string;
+  given_name: string;
+  family_name: string;
+  middle_name: string;
+  profile: string;
+  picture: string;
+  email: string;
 };
 
 const kv = await Deno.openKv();
@@ -27,11 +35,15 @@ export async function getSession(
   }
 
   if (session.value.expiresAt < Date.now()) {
-    await kv.delete(["sessions", sessionId]);
+    deleteSession(sessionId);
     return null;
   }
 
   return session.value;
+}
+
+export async function deleteSession(sessionId: string) {
+  await kv.delete(["sessions", sessionId]);
 }
 
 export function redirectToLogin(redirectUrl: string) {
@@ -81,17 +93,20 @@ export async function retrieveToken(code: string, redirectUrl: string) {
     throw new Error(token.error_description);
   }
 
+  const userData = parseJwt(token.id_token);
+  const user = await getUserByAuth0Id(userData.sub) ??
+    await createUser(userData);
+  const userId: string = user.id;
+
   const sessionHash = await crypto.subtle.digest(
     "SHA-256",
     new TextEncoder().encode(token.access_token),
   );
-
   const sessionId = encodeHex(sessionHash);
-
   await kv.set(["sessions", sessionId], {
+    sessionId,
     accessToken: token.access_token,
-    idToken: token.id_token,
-    userData: parseJwt(token.id_token),
+    userId: userId,
     scope: token.scope,
     expiresAt: Date.now() + (token.expires_in * 1000),
   });
@@ -105,7 +120,7 @@ export async function retrieveToken(code: string, redirectUrl: string) {
   });
 }
 
-function parseJwt(token: string) {
+function parseJwt(token: string): JwtTokenContent {
   const base64Url = token.split(".")[1];
   const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
   const jsonPayload = decodeURIComponent(

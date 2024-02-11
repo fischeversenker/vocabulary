@@ -1,26 +1,10 @@
-import { AppProps } from "$fresh/server.ts";
+import { PageProps } from "$fresh/server.ts";
 import { Header } from "../components/Header.tsx";
-import { getSettings, saveSettings } from "../utils/server/user.ts";
 import { AppState } from "./_middleware.ts";
 
-export default async function App(
-  req: Request,
-  { Component, route, state }: AppProps<unknown, AppState>,
+export default function App(
+  { Component, route, state }: PageProps<unknown, AppState>,
 ) {
-  const url = new URL(req.url);
-
-  if (url.searchParams.has("original")) {
-    const showOriginal = url.searchParams.get("original") === "true";
-    await saveSettings({ showOriginal });
-  }
-
-  const userSettings = await getSettings();
-
-  let activeRoute = route;
-  if (activeRoute === "/quiz") {
-    activeRoute += `?original=${userSettings.showOriginal}`;
-  }
-
   return (
     <html>
       <head>
@@ -32,8 +16,8 @@ export default async function App(
       </head>
       <body>
         <Header
-          activeRoute={activeRoute}
-          user={state.session?.userData.given_name ?? "Anonymous"}
+          activeRoute={route}
+          user={state.user?.profile.givenName ?? "Anonymous"}
         />
         <section
           class="section px-3 pt-3 pb-6"
