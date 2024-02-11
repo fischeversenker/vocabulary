@@ -20,7 +20,7 @@ export default async function NewVocabulary(
     nativeName: "Deutsch",
   });
 
-  await addUserVocabulary(ctx.state.user.id, newVocabulary);
+  await addUserVocabulary(ctx.state.user.id, newVocabulary.id);
 
   const userSettings = await getUserSettings(ctx.state.user.id);
   await saveUserSettings(ctx.state.user.id, {

@@ -1,6 +1,5 @@
 import { JwtTokenContent } from "./auth.ts";
 import { kv } from "./kv.ts";
-import { Vocabulary } from "./vocabularies.ts";
 
 export type User = {
   id: string;
@@ -47,12 +46,13 @@ export async function getUser(userId: string) {
 }
 
 export async function getUserByAuth0Id(auth0Id: string) {
-  const users = await kv.get<User[]>(["users"]);
-  if (users.value === null) {
-    return null;
+  const users = await kv.list<User>({ prefix: ["users"] });
+  for await (const user of users) {
+    if (user.value.auth0Id === auth0Id) {
+      return user.value;
+    }
   }
-
-  return users.value.find((user) => user.auth0Id === auth0Id);
+  return null;
 }
 
 export async function getUserSettings(userId: string): Promise<UserSettings> {
@@ -80,9 +80,9 @@ export async function getUserVocabularyIds(
 
 export async function addUserVocabulary(
   userId: string,
-  vocabulary: Vocabulary,
+  vocabularyId: string,
 ) {
   const vocabularies = await getUserVocabularyIds(userId);
-  vocabularies.push(vocabulary.id);
+  vocabularies.push(vocabularyId);
   await kv.set(["users", userId, "vocabularies"], vocabularies);
 }
