@@ -2,12 +2,15 @@ import { useSignal } from "@preact/signals";
 import { Certainty, WordWithUrgency } from "../utils/server/words.ts";
 
 interface NewWordProps {
+  vocabularyId: string;
   word: WordWithUrgency;
   showOriginal: boolean;
   continueAnyway: boolean;
 }
 
-export function QuizWord({ word, showOriginal, continueAnyway }: NewWordProps) {
+export function QuizWord(
+  { vocabularyId, word, showOriginal, continueAnyway }: NewWordProps,
+) {
   const showTranslation = !showOriginal;
 
   const isRevealed = useSignal(false);
@@ -33,7 +36,7 @@ export function QuizWord({ word, showOriginal, continueAnyway }: NewWordProps) {
   }
 
   async function answer(certainty: Certainty) {
-    await fetch(`/api/quiz/${word.original}`, {
+    await fetch(`/api/vocabularies/${vocabularyId}/quiz/${word.id}`, {
       method: "PATCH",
       body: JSON.stringify({
         certainty,

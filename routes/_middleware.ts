@@ -24,6 +24,10 @@ export async function handler(
     return ctx.next();
   }
 
+  if (requestUrl.pathname === "/api/migrate") {
+    return ctx.next();
+  }
+
   const cookies = getCookies(req.headers);
   const sessionId = cookies.sessionId;
 

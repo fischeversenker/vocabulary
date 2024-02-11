@@ -1,7 +1,6 @@
 import { JwtTokenContent } from "./auth.ts";
-import { Word } from "./words.ts";
-
-const kv = await Deno.openKv();
+import { kv } from "./kv.ts";
+import { Vocabulary } from "./vocabularies.ts";
 
 export type User = {
   id: string;
@@ -12,19 +11,11 @@ export type User = {
     familyName: string;
     pictureUrl: string;
   };
-  languages: string[];
-  settings: UserSettings;
 };
 
 export type UserSettings = {
   showOriginal: boolean;
-};
-
-export type Language = {
-  id: string;
-  name: string;
-  foreignName: string;
-  words: Word[];
+  activeVocabularyId?: string;
 };
 
 export async function createUser(userData: JwtTokenContent): Promise<User> {
@@ -37,8 +28,6 @@ export async function createUser(userData: JwtTokenContent): Promise<User> {
       familyName: userData.family_name,
       pictureUrl: userData.picture,
     },
-    languages: [],
-    settings: { showOriginal: false },
   };
 
   await kv.set(["users", newUser.id], newUser);
@@ -66,7 +55,7 @@ export async function getUserByAuth0Id(auth0Id: string) {
   return users.value.find((user) => user.auth0Id === auth0Id);
 }
 
-export async function getSettings(userId: string): Promise<UserSettings> {
+export async function getUserSettings(userId: string): Promise<UserSettings> {
   const userSettingsKV = await kv.get<UserSettings>(
     ["users", userId, "settings"],
   );
@@ -74,6 +63,26 @@ export async function getSettings(userId: string): Promise<UserSettings> {
   return userSettingsKV.value ?? { showOriginal: false };
 }
 
-export async function saveSettings(userId: string, settings: UserSettings) {
+export async function saveUserSettings(userId: string, settings: UserSettings) {
   await kv.set(["users", userId, "settings"], settings);
+}
+
+export async function getUserVocabularyIds(
+  userId: string,
+): Promise<string[]> {
+  const vocabularyIds = await kv.get<string[]>([
+    "users",
+    userId,
+    "vocabularies",
+  ]);
+  return vocabularyIds.value ?? [];
+}
+
+export async function addUserVocabulary(
+  userId: string,
+  vocabulary: Vocabulary,
+) {
+  const vocabularies = await getUserVocabularyIds(userId);
+  vocabularies.push(vocabulary.id);
+  await kv.set(["users", userId, "vocabularies"], vocabularies);
 }

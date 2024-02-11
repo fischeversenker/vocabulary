@@ -1,14 +1,9 @@
 import { IS_BROWSER } from "$fresh/runtime.ts";
 import { signal } from "@preact/signals";
+import { kv } from "./kv.ts";
 
 export const filteredWordList = signal<WordWithNormalizedUrgency[]>([]);
 export const searchString = signal<string>("");
-
-export const WORD_DATA_KV_PATH = [
-  "fischeversenker",
-  "bulgarian",
-  "words",
-] as const;
 
 export type Certainty = 1 | 2 | 3;
 
@@ -31,6 +26,7 @@ export interface Word {
   createdAt: number;
   history: QuizHistoryEntry[];
   class: WordClassType;
+  id: string;
 }
 
 export interface WordWithUrgency extends Word {
@@ -46,14 +42,16 @@ interface QuizHistoryEntry {
   certainty: Certainty;
 }
 
-const kv = await Deno.openKv();
-
 if (IS_BROWSER) {
   throw new Error("this file must not be imported in the browser");
 }
 
-export async function getWordList(): Promise<WordWithNormalizedUrgency[]> {
-  const words = kv.list<Word>({ prefix: [...WORD_DATA_KV_PATH] });
+export async function getWordList(
+  vocabularyId: string,
+): Promise<WordWithNormalizedUrgency[]> {
+  const words = kv.list<Word>({
+    prefix: ["vocabularies", vocabularyId, "words"],
+  });
 
   const wordValues: WordWithUrgency[] = [];
   let maxUrgency = 0;
@@ -75,16 +73,28 @@ export async function getWordList(): Promise<WordWithNormalizedUrgency[]> {
   return wordValuesWithUrgency;
 }
 
-export async function getWord(wordId: string): Promise<Word> {
-  const word = await kv.get<Word>([...WORD_DATA_KV_PATH, wordId]);
+export async function getWord(
+  vocabularyId: string,
+  wordId: string,
+): Promise<Word> {
+  const word = await kv.get<Word>([
+    "vocabularies",
+    vocabularyId,
+    "words",
+    wordId,
+  ]);
   if (!word.value) {
     throw new Error("Word not found");
   }
   return word.value;
 }
 
-export function createWord(rawWord: Word): Word {
+export function upsertWord(
+  vocabularyId: string,
+  rawWord: Omit<Word, "id"> & { id?: string },
+): Word {
   const word: Word = {
+    id: rawWord.id ?? crypto.randomUUID(),
     original: rawWord.original.trim(),
     translation: rawWord.translation.trim(),
     createdAt: rawWord.createdAt ?? Date.now(),
@@ -92,20 +102,29 @@ export function createWord(rawWord: Word): Word {
     class: rawWord.class ?? "unknown",
   };
 
-  kv.atomic().set([...WORD_DATA_KV_PATH, rawWord.original.trim()], word)
+  kv.atomic().set([
+    "vocabularies",
+    vocabularyId,
+    "words",
+    word.id,
+  ], word)
     .commit();
   return word;
 }
 
-export function deleteWord(wordId: string): boolean {
-  const wordPath = [...WORD_DATA_KV_PATH, wordId];
+export function deleteWord(vocabularyId: string, wordId: string): boolean {
+  const wordPath = ["vocabularies", vocabularyId, "words", wordId];
 
   kv.atomic().delete(wordPath).commit();
   return true;
 }
 
-export async function addQuizEntry(wordId: string, certainty: Certainty) {
-  const wordPath = [...WORD_DATA_KV_PATH, wordId];
+export async function addQuizEntry(
+  vocabularyId: string,
+  wordId: string,
+  certainty: Certainty,
+) {
+  const wordPath = ["vocabularies", vocabularyId, "words", wordId];
 
   const word = await kv.get<Word>(wordPath);
   if (!word.value) {
@@ -126,12 +145,14 @@ export async function addQuizEntry(wordId: string, certainty: Certainty) {
   kv.atomic().set(wordPath, newWord).commit();
 }
 
-export async function getMostUrgentWord(): Promise<WordWithUrgency> {
-  const wordList = await getWordList();
+export async function getMostUrgentWord(
+  vocabularyId: string,
+): Promise<WordWithUrgency | undefined> {
+  const wordList = await getWordList(vocabularyId);
 
   const wordsSortedByUrgency = wordList.sort((a, b) => b.urgency - a.urgency);
 
-  return wordsSortedByUrgency.at(0)!;
+  return wordsSortedByUrgency.at(0);
 }
 
 export function getWordUrgency(word: Word): number {

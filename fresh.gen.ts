@@ -6,15 +6,17 @@ import * as $_404 from "./routes/_404.tsx";
 import * as $_500 from "./routes/_500.tsx";
 import * as $_app from "./routes/_app.tsx";
 import * as $_middleware from "./routes/_middleware.ts";
-import * as $api_quiz_wordId_ from "./routes/api/quiz/[wordId].ts";
-import * as $api_words from "./routes/api/words.ts";
-import * as $api_words_wordId_ from "./routes/api/words/[wordId].ts";
-import * as $api_words_rename from "./routes/api/words/rename.ts";
+import * as $api_migrate from "./routes/api/migrate.ts";
+import * as $api_vocabularies_vocabularyId_quiz_wordId_ from "./routes/api/vocabularies/[vocabularyId]/quiz/[wordId].ts";
+import * as $api_vocabularies_vocabularyId_words from "./routes/api/vocabularies/[vocabularyId]/words.ts";
+import * as $api_vocabularies_vocabularyId_words_wordId_ from "./routes/api/vocabularies/[vocabularyId]/words/[wordId].ts";
+import * as $api_vocabularies_vocabularyId_words_rename from "./routes/api/vocabularies/[vocabularyId]/words/rename.ts";
 import * as $auth from "./routes/auth.tsx";
 import * as $auth_logout from "./routes/auth/logout.ts";
 import * as $index from "./routes/index.tsx";
-import * as $words from "./routes/words.tsx";
+import * as $vocabularies_new from "./routes/vocabularies/new.tsx";
 import * as $words_word_ from "./routes/words/[word].tsx";
+import * as $words_index from "./routes/words/index.tsx";
 import * as $NewWord from "./islands/NewWord.tsx";
 import * as $QuizWord from "./islands/QuizWord.tsx";
 import * as $Search from "./islands/Search.tsx";
@@ -28,15 +30,21 @@ const manifest = {
     "./routes/_500.tsx": $_500,
     "./routes/_app.tsx": $_app,
     "./routes/_middleware.ts": $_middleware,
-    "./routes/api/quiz/[wordId].ts": $api_quiz_wordId_,
-    "./routes/api/words.ts": $api_words,
-    "./routes/api/words/[wordId].ts": $api_words_wordId_,
-    "./routes/api/words/rename.ts": $api_words_rename,
+    "./routes/api/migrate.ts": $api_migrate,
+    "./routes/api/vocabularies/[vocabularyId]/quiz/[wordId].ts":
+      $api_vocabularies_vocabularyId_quiz_wordId_,
+    "./routes/api/vocabularies/[vocabularyId]/words.ts":
+      $api_vocabularies_vocabularyId_words,
+    "./routes/api/vocabularies/[vocabularyId]/words/[wordId].ts":
+      $api_vocabularies_vocabularyId_words_wordId_,
+    "./routes/api/vocabularies/[vocabularyId]/words/rename.ts":
+      $api_vocabularies_vocabularyId_words_rename,
     "./routes/auth.tsx": $auth,
     "./routes/auth/logout.ts": $auth_logout,
     "./routes/index.tsx": $index,
-    "./routes/words.tsx": $words,
+    "./routes/vocabularies/new.tsx": $vocabularies_new,
     "./routes/words/[word].tsx": $words_word_,
+    "./routes/words/index.tsx": $words_index,
   },
   islands: {
     "./islands/NewWord.tsx": $NewWord,

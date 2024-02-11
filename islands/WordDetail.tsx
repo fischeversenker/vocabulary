@@ -5,9 +5,10 @@ import { Word, WordClassType } from "../utils/server/words.ts";
 
 interface WordDetailProps {
   word: Word;
+  vocabularyId: string;
 }
 
-export function WordDetail({ word }: WordDetailProps) {
+export function WordDetail({ word, vocabularyId }: WordDetailProps) {
   const translationRef = createRef();
   const wordClassRef = createRef();
   const hasChanges = signal(false);
@@ -19,17 +20,20 @@ export function WordDetail({ word }: WordDetailProps) {
     const translation = translationRef.current.textContent;
     const wordClass = wordClassRef.current.value as WordClassType;
 
-    const response = await fetch(`/api/words/${word.original}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `/api/vocabularies/${vocabularyId}/words/${word.id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...word,
+          translation,
+          class: wordClass,
+        }),
       },
-      body: JSON.stringify({
-        ...word,
-        translation,
-        class: wordClass,
-      }),
-    });
+    );
 
     word = await response.json();
     hasChanges.value = false;
@@ -45,7 +49,7 @@ export function WordDetail({ word }: WordDetailProps) {
   async function onDelete(e: Event) {
     e.preventDefault();
 
-    await fetch(`/api/words/${word.original}`, {
+    await fetch(`/api/vocabularies/${vocabularyId}/words/${word.original}`, {
       method: "DELETE",
     });
     window.location.href = "/";

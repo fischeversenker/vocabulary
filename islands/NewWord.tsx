@@ -1,6 +1,10 @@
 import { createRef } from "preact";
 
-export function NewWord() {
+type Props = {
+  vocabularyId: string;
+};
+
+export function NewWord({ vocabularyId }: Props) {
   const originalRef = createRef();
   const translationRef = createRef();
 
@@ -14,7 +18,7 @@ export function NewWord() {
       translation,
     };
 
-    await fetch(`/api/words/${original}`, {
+    await fetch(`/api/vocabularies/${vocabularyId}/words/${original}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

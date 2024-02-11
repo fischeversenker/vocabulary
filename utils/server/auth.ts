@@ -1,4 +1,5 @@
 import { encodeHex } from "https://deno.land/std@0.213.0/encoding/hex.ts";
+import { kv } from "./kv.ts";
 import { createUser, getUserByAuth0Id } from "./user.ts";
 
 export type UserSession = {
@@ -19,8 +20,6 @@ export type JwtTokenContent = {
   picture: string;
   email: string;
 };
-
-const kv = await Deno.openKv();
 
 export async function getSession(
   sessionId: string | undefined,
@@ -109,7 +108,7 @@ export async function retrieveToken(code: string, redirectUrl: string) {
     userId: userId,
     scope: token.scope,
     expiresAt: Date.now() + (token.expires_in * 1000),
-  });
+  }, { expireIn: token.expires_in * 1000 });
 
   return new Response(null, {
     status: 302,

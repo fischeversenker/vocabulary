@@ -1,6 +1,5 @@
-import { FreshContext, RouteConfig } from "$fresh/server.ts";
+import { RouteConfig } from "$fresh/server.ts";
 import { retrieveToken } from "../utils/server/auth.ts";
-import { AppState } from "./_middleware.ts";
 
 export const config: RouteConfig = {
   skipAppWrapper: true,
@@ -11,7 +10,6 @@ export const config: RouteConfig = {
 // deno-lint-ignore require-await
 export default async function handler(
   req: Request,
-  ctx: FreshContext<AppState>,
 ) {
   const reqUrl = new URL(req.url);
   const code = reqUrl.searchParams.get("code");

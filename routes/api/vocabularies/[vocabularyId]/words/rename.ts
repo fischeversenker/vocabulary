@@ -1,9 +1,9 @@
 import { HandlerContext } from "$fresh/server.ts";
 import {
-  createWord,
   deleteWord,
   getWord,
-} from "../../../utils/server/words.ts";
+  upsertWord,
+} from "../../../../../utils/server/words.ts";
 
 export const handler = {
   async GET(req: Request, _ctx: HandlerContext) {
@@ -14,14 +14,14 @@ export const handler = {
       return new Response(null, { status: 400 });
     }
 
-    const oldWord = await getWord(oldWordOriginal);
-    const newWord = createWord({
+    const oldWord = await getWord(_ctx.params.vocabularyId, oldWordOriginal);
+    const newWord = upsertWord(_ctx.params.vocabularyId, {
       ...oldWord,
       original: newWordOriginal,
     });
 
     if (newWord) {
-      deleteWord(oldWord.original);
+      deleteWord(_ctx.params.vocabularyId, oldWord.original);
     }
     return new Response(JSON.stringify(newWord));
   },

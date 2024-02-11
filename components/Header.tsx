@@ -15,7 +15,7 @@ export function Header({ activeRoute, user }: HeaderProps) {
           class={`navbar-item is-tab ${activeRoute === "/" ? "is-active" : ""}`}
           href="/"
         >
-          Quiz
+          Home
         </a>
         <a
           class={`navbar-item is-tab ${
