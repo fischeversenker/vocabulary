@@ -33,12 +33,16 @@ export default async function Home(req: Request, ctx: FreshContext<AppState>) {
     (a, b) => {
       if (sortOrder === "asc") {
         if (sortBy === "original" || sortBy === "translation") {
-          return a[sortBy].localeCompare(b[sortBy]);
+          return a[sortBy].localeCompare(b[sortBy], undefined, {
+            sensitivity: "accent",
+          });
         }
         return a[sortBy] - b[sortBy];
       } else {
         if (sortBy === "original" || sortBy === "translation") {
-          return b[sortBy].localeCompare(a[sortBy]);
+          return b[sortBy].localeCompare(a[sortBy], undefined, {
+            sensitivity: "accent",
+          });
         }
         return b[sortBy] - a[sortBy];
       }
