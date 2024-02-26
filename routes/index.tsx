@@ -41,7 +41,9 @@ export default async function Vocabularies(
     });
   }
 
-  const vocabulary = await getVocabulary(vocabularyIds[0]);
+  const vocabulary = await getVocabulary(
+    userSettings.activeVocabularyId ?? vocabularyIds[0],
+  );
 
   const url = new URL(req.url);
   const cookies = getCookies(req.headers);
