@@ -3,21 +3,58 @@ import { WordWithNormalizedUrgency } from "../utils/server/words.ts";
 
 interface WordListProps {
   words: Signal<WordWithNormalizedUrgency[]>;
+  sortBy: "original" | "translation" | "urgency";
+  sortOrder: "asc" | "desc";
 }
 
-export function WordList({ words }: WordListProps) {
+export function WordList({ words, sortBy, sortOrder }: WordListProps) {
+  function getSearchString(
+    clicked: "original" | "translation" | "urgency",
+    sortBy: "original" | "translation" | "urgency",
+    sortOrder: "asc" | "desc",
+  ): string {
+    const isClickedSortBy = sortBy === clicked;
+    const newSortOrder = isClickedSortBy
+      ? (sortOrder === "asc" ? "desc" : "asc")
+      : "asc";
+    return `?sortBy=${clicked}&sortOrder=${newSortOrder}`;
+  }
+
+  function getSortLinkClass(column: string) {
+    const isSortedColumn = sortBy === column;
+    if (!isSortedColumn) {
+      return "";
+    }
+    return `sorted ${sortOrder}`;
+  }
+
   return (
     <table class="table is-striped is-fullwidth is-narrow block">
       <thead>
         <tr>
           <th>
-            Original
+            <a
+              href={getSearchString("original", sortBy, sortOrder)}
+              class={`${sortOrder} ${sortBy === "original" ? "sorted" : ""}`}
+            >
+              Original
+            </a>
           </th>
           <th>
-            Translation
+            <a
+              href={getSearchString("translation", sortBy, sortOrder)}
+              class={`${sortOrder} ${sortBy === "translation" ? "sorted" : ""}`}
+            >
+              Translation
+            </a>
           </th>
           <th>
-            Urgency
+            <a
+              href={getSearchString("urgency", sortBy, sortOrder)}
+              class={`${sortOrder} ${sortBy === "urgency" ? "sorted" : ""}`}
+            >
+              Urgency
+            </a>
           </th>
         </tr>
       </thead>

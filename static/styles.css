@@ -2,3 +2,17 @@ html,
 body {
   height: 100%;
 }
+
+/* sorting */
+.sorted:after {
+  padding-left: 5px;
+  position: absolute;
+}
+
+.sorted.asc:after {
+  content: '▼';
+}
+
+.sorted.desc:after {
+  content: '▲';
+}
