@@ -50,17 +50,22 @@ export function Search({ knownWords, filteredWords }: Props) {
       >
       </input>
 
-      <select class="select ml-2" onChange={(event) => onClassChanged(event)}>
-        <option value="all" selected={selectedClass === "all"}>All</option>
-        {WordClasses.map((wordClass) => (
-          <option
-            selected={wordClass.value === selectedClass}
-            value={wordClass.value}
-          >
-            {wordClass.label}
-          </option>
-        ))}
-      </select>
+      <div class="select">
+        <select
+          class=" ml-2"
+          onChange={(event) => onClassChanged(event)}
+        >
+          <option value="all" selected={selectedClass === "all"}>All</option>
+          {WordClasses.map((wordClass) => (
+            <option
+              selected={wordClass.value === selectedClass}
+              value={wordClass.value}
+            >
+              {wordClass.label}
+            </option>
+          ))}
+        </select>
+      </div>
     </div>
   );
 }
