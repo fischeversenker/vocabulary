@@ -18,7 +18,7 @@ export default async function Home(req: Request, ctx: FreshContext<AppState>) {
   }
 
   const url = new URL(req.url);
-  const sortBy = url.searchParams.get("sortBy") ?? "urgency";
+  const sortBy = url.searchParams.get("sortBy") ?? "original";
   const sortOrder = url.searchParams.get("sortOrder") ?? "asc";
 
   if (!isValidSortByValue(sortBy)) {
